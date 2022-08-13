@@ -13,6 +13,8 @@ public interface TitleRepository extends MongoRepository<Title, String>, CustomT
     Page<Title> findAll(Pageable pageable);
     Page<Title> findAllByPublisherKey(String key, Pageable pageable);
     Page<Title> findAllByPublisher(ObjectId publisher, Pageable pageable);
+
+    Page<Title> findAllByUsername(String username, Pageable pageable);
     Title findById(ObjectId id);
     boolean existsByKey(String key);
     Title findByPublisherKeyAndTitleKey(String publisherKey, String titleKey);

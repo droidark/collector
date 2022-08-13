@@ -1,6 +1,8 @@
 package com.comixtorm.collector.domain.repository.custom;
 
 import com.comixtorm.collector.domain.model.Issue;
+import com.comixtorm.collector.domain.model.query.Ids;
+import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -20,4 +22,6 @@ public interface CustomIssueRepository {
             String titleKey,
             String issueKey,
             Pageable pageable);
+
+    Ids findPublisherIdAndTitleByIssueId(ObjectId issueId);
 }

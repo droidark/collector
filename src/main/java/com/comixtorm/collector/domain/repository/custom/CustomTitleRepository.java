@@ -6,5 +6,6 @@ import org.springframework.data.domain.Pageable;
 
 public interface CustomTitleRepository {
     Page<Title> findAllByPublisherKey(String publisherKey, Pageable pageable);
+    Page<Title> findAllByUsername(String username, Pageable pageable);
     Title findByPublisherKeyAndTitleKey(String publisherKey, String titleKey);
 }

@@ -2,19 +2,21 @@ package com.comixtorm.collector.domain.repository.custom.impl;
 
 import com.comixtorm.collector.domain.model.Issue;
 import com.comixtorm.collector.domain.model.PaginatedIssue;
+import com.comixtorm.collector.domain.model.query.Ids;
 import com.comixtorm.collector.domain.repository.custom.CustomIssueRepository;
 import com.comixtorm.collector.util.Utilities;
-import lombok.AllArgsConstructor;
+import lombok.*;
+import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.AggregationResults;
-import org.springframework.data.mongodb.core.aggregation.FacetOperation;
-import org.springframework.data.mongodb.core.aggregation.LookupOperation;
+import org.springframework.data.mongodb.core.aggregation.*;
 import org.springframework.data.mongodb.core.query.Criteria;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.facet;
@@ -129,7 +131,8 @@ public class CustomIssueRepositoryImpl implements CustomIssueRepository {
         Aggregation aggregation = Aggregation.newAggregation(
                 titleLookupOperation,
                 Aggregation.unwind("$titleData"),
-                publisherLookupOperation,Aggregation.unwind("$publisherData"),
+                publisherLookupOperation,
+                Aggregation.unwind("$publisherData"),
                 Aggregation.match(Criteria
                         .where("publisherData.key").is(publisherKey)
                         .and("titleData.key").is(titleKey)
@@ -143,5 +146,33 @@ public class CustomIssueRepositoryImpl implements CustomIssueRepository {
         return new PageImpl<>(result.getUniqueMappedResult().getResultData(),
                 pageable,
                 result.getUniqueMappedResult().getPageInfo().get(0).get("TotalRecords"));
+    }
+
+    @Override
+    public Ids findPublisherIdAndTitleByIssueId(ObjectId issueId) {
+        LookupOperation titleLookupOperation = LookupOperation.newLookup()
+                .from("title")
+                .localField("title")
+                .foreignField("_id")
+                .as("titleData");
+
+        LookupOperation publisherLookupOperation = LookupOperation.newLookup()
+                .from("publisher")
+                .localField("titleData.publisher")
+                .foreignField("_id")
+                .as("publisherData");
+
+        Aggregation aggregation = Aggregation.newAggregation(
+                titleLookupOperation,
+                Aggregation.unwind("$titleData"),
+                publisherLookupOperation,
+                Aggregation.unwind("$publisherData"),
+                Aggregation.match(Criteria.where("_id").is(issueId)),
+                Aggregation.replaceRoot().withDocument(new Document("publisherId", "$publisherData._id").append("titleId", "$titleData._id"))
+        );
+
+        AggregationResults<Ids> results = mongoOperations.aggregate(aggregation, Issue.class, Ids.class);
+
+        return results.getUniqueMappedResult();
     }
 }

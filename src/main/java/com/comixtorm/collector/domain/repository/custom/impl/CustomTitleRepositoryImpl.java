@@ -54,6 +54,37 @@ public class CustomTitleRepositoryImpl implements CustomTitleRepository {
     }
 
     @Override
+    public Page<Title> findAllByUsername(String username, Pageable pageable) {
+
+        long skip = Utilities.getSkip(pageable);
+        long limit = pageable.getPageSize();
+
+        LookupOperation lookupOperation = LookupOperation.newLookup()
+                .from("user")
+                .localField("_id")
+                .foreignField("items.titleId")
+                .as("userData");
+
+        FacetOperation facetOperation = facet(
+                Aggregation.skip(skip),
+                Aggregation.limit(limit))
+                .as("resultData")
+                .and(Aggregation.count().as("TotalRecords"))
+                .as("pageInfo");
+
+        Aggregation aggregation = Aggregation.newAggregation(
+                lookupOperation,
+                Aggregation.match(Criteria.where("userData.username").is(username)),
+                facetOperation);
+
+        AggregationResults<PaginatedTitle> results = mongoOperations.aggregate(aggregation, Title.class, PaginatedTitle.class);
+
+        return new PageImpl<>(results.getUniqueMappedResult().getResultData(),
+                pageable,
+                results.getUniqueMappedResult().getPageInfo().get(0).get("TotalRecords"));
+    }
+
+    @Override
     public Title findByPublisherKeyAndTitleKey(String publisherKey, String titleKey) {
         LookupOperation lookupOperation = LookupOperation.newLookup()
                 .from("publisher")
