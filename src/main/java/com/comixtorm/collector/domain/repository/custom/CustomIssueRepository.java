@@ -23,5 +23,7 @@ public interface CustomIssueRepository {
             String issueKey,
             Pageable pageable);
 
+    Page<Issue> findAllByUsernameAndTitleId(String username, ObjectId titleId, Pageable pageable);
+
     Ids findPublisherIdAndTitleByIssueId(ObjectId issueId);
 }

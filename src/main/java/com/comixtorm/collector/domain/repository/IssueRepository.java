@@ -20,5 +20,6 @@ public interface IssueRepository extends MongoRepository<Issue, String>, CustomI
     Optional<Issue> findOneByPublisherKeyAndTitleKeyAndIssueKey(String publisherKey, String titleKey, String issueKey);
     Page<Issue> findAllByVariantOfAndVariantIsTrue(ObjectId variantOf, Pageable pageable);
     Page<Issue> findAllVariantsByPublisherKeyAndTitleKeyAndIssueKey(String publisherKey, String titleKey, String issueKey, Pageable pageable);
+    Page<Issue> findAllByUsernameAndTitleId(String username, ObjectId titleId, Pageable pageable);
     Ids findPublisherIdAndTitleByIssueId(ObjectId issueId);
 }

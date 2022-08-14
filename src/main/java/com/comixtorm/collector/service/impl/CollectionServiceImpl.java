@@ -1,5 +1,6 @@
 package com.comixtorm.collector.service.impl;
 
+import com.comixtorm.collector.domain.model.Issue;
 import com.comixtorm.collector.domain.model.Item;
 import com.comixtorm.collector.domain.model.Title;
 import com.comixtorm.collector.domain.model.User;
@@ -9,6 +10,7 @@ import com.comixtorm.collector.domain.repository.TitleRepository;
 import com.comixtorm.collector.domain.repository.UserRepository;
 import com.comixtorm.collector.service.CollectionService;
 import lombok.AllArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,11 @@ public class CollectionServiceImpl implements CollectionService {
     @Override
     public Page<Title> getTitlesByUsername(String username, Pageable pageable) {
         return titleRepository.findAllByUsername(username, pageable);
+    }
+
+    @Override
+    public Page<Issue> getIssuesByUsernameAndTitleId(String username, ObjectId titleId, Pageable pageable) {
+        return issueRepository.findAllByUsernameAndTitleId(username, titleId, pageable);
     }
 
     @Override

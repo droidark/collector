@@ -149,6 +149,39 @@ public class CustomIssueRepositoryImpl implements CustomIssueRepository {
     }
 
     @Override
+    public Page<Issue> findAllByUsernameAndTitleId(String username, ObjectId titleId, Pageable pageable) {
+        long skip = Utilities.getSkip(pageable);
+        long limit = pageable.getPageSize();
+
+        LookupOperation userLookupOperation = LookupOperation.newLookup()
+                .from("user")
+                .localField("_id")
+                .foreignField("items.issueId")
+                .as("userData");
+
+        FacetOperation facetOperation = facet(
+                Aggregation.skip(skip),
+                Aggregation.limit(limit))
+                .as("resultData")
+                .and(Aggregation.count().as("TotalRecords"))
+                .as("pageInfo");
+
+        Aggregation aggregation = Aggregation.newAggregation(
+                userLookupOperation,
+                Aggregation.match(Criteria
+                        .where("userData.username").is(username)
+                        .and("title").is(titleId)
+                        .and("variant").is(false)),
+                facetOperation);
+
+        AggregationResults<PaginatedIssue> results = mongoOperations.aggregate(aggregation, Issue.class, PaginatedIssue.class);
+
+        return new PageImpl<>(results.getUniqueMappedResult().getResultData(),
+                pageable,
+                results.getUniqueMappedResult().getPageInfo().get(0).get("TotalRecords"));
+    }
+
+    @Override
     public Ids findPublisherIdAndTitleByIssueId(ObjectId issueId) {
         LookupOperation titleLookupOperation = LookupOperation.newLookup()
                 .from("title")
