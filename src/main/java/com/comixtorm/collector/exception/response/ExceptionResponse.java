@@ -3,6 +3,7 @@ package com.comixtorm.collector.exception.response;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -11,6 +12,6 @@ import java.util.Date;
 @Builder
 public class ExceptionResponse {
     private Date timestamp;
-    private String message;
-    private String detail;
+    private String error;
+    private List<Detail> detail;
 }

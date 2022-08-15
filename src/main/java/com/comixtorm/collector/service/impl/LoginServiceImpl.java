@@ -12,7 +12,6 @@ import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.Date;
 import java.util.stream.Collectors;
 
 @Service("loginService")
@@ -46,7 +45,7 @@ public class LoginServiceImpl implements LoginService {
                 .builder()
                 .accessToken(jwt.getTokenValue())
                 .tokenType("Bearer")
-                .expiresIn(Date.from(now.plusSeconds(expiry)))
+                .expiresIn(expiry)
                 .build();
     }
 }

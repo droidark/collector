@@ -6,8 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,5 +18,5 @@ public class Token {
     private String tokenType;
 
     @JsonProperty("expires_in")
-    private Date expiresIn;
+    private long expiresIn;
 }

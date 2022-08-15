@@ -20,7 +20,7 @@ public class IssueController {
     private IssueService issueService;
 
     @GetMapping
-    public @ResponseBody Page<Issue> retrieveAllIssues(
+    public Page<Issue> retrieveAllIssues(
             @RequestParam(name = "publisher", required = false) Optional<String> publisherKey,
             @RequestParam(name = "title", required = false) Optional<String> titleKey,
             @RequestParam(name = "variant", required = false, defaultValue = "false") boolean variant,
@@ -30,7 +30,7 @@ public class IssueController {
     }
 
     @GetMapping("/{key}")
-    public @ResponseBody Issue retrieveIssueById(
+    public Issue retrieveIssueById(
             @PathVariable String key,
             @RequestParam(name = "publisher", required = false) Optional<String> publisherKey,
             @RequestParam(name = "title", required = false) Optional<String> titleKey) throws
@@ -41,7 +41,7 @@ public class IssueController {
     }
 
     @GetMapping("/{key}/variants")
-    public @ResponseBody Page<Issue> retrieveVariantIssuesById(
+    public Page<Issue> retrieveVariantIssuesById(
             @PathVariable String key,
             @RequestParam(name = "publisher", required = false) Optional<String> publisherKey,
             @RequestParam(name = "title", required = false) Optional<String> titleKey,

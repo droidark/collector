@@ -19,19 +19,19 @@ public class PublisherController {
     private TitleService titleService;
 
     @GetMapping
-    public @ResponseBody Page<Publisher> retrieveAllPublishers(
+    public Page<Publisher> retrieveAllPublishers(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         return publisherService.getAllPublishers(PageRequest.of(page, size));
     }
 
     @GetMapping("/{key}")
-    public @ResponseBody Publisher retrievePublisherByKey(@PathVariable String key) throws NoContentException {
+    public Publisher retrievePublisherByKey(@PathVariable String key) throws NoContentException {
         return publisherService.getPublisherByKey(key).orElseThrow(() -> new NoContentException());
     }
 
     @GetMapping("/{key}/titles")
-    public @ResponseBody Page<Title> retrieveTitlesByKey(
+    public Page<Title> retrieveTitlesByKey(
             @PathVariable String key,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {

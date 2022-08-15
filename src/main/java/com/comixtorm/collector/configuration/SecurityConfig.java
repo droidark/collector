@@ -60,7 +60,7 @@ public class SecurityConfig {
                 .cors()
                 .disable()
                 .authorizeHttpRequests()
-                .antMatchers("/login")
+                .antMatchers("/login", "/signup")
                 .permitAll()
                 .anyRequest()
                 .authenticated()

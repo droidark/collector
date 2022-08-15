@@ -1,7 +1,9 @@
 package com.comixtorm.collector.service.impl;
 
+import com.comixtorm.collector.domain.model.Issue;
 import com.comixtorm.collector.domain.model.Title;
 import com.comixtorm.collector.domain.model.exception.PublisherKeyNotFoundException;
+import com.comixtorm.collector.domain.repository.IssueRepository;
 import com.comixtorm.collector.domain.repository.PublisherRepository;
 import com.comixtorm.collector.domain.repository.TitleRepository;
 import com.comixtorm.collector.service.TitleService;
@@ -20,6 +22,17 @@ public class TitleServiceImpl implements TitleService {
 
     private PublisherRepository publisherRepository;
     private TitleRepository titleRepository;
+    private IssueRepository issueRepository;
+
+    @Override
+    public Page<Title> getAllTitles(Pageable pageable) {
+        return titleRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<Issue> getAllIssuesByTitle(ObjectId titleId, Pageable pageable) {
+        return issueRepository.findAllByTitle(titleId, pageable);
+    }
 
     @Override
     public Page<Title> getTitlesByKey(String key, Pageable pageable) {

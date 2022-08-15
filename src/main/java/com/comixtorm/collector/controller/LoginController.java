@@ -13,11 +13,8 @@ public class LoginController {
 
     private LoginService loginService;
 
-    @PostMapping(value = "/login")
+    @PostMapping("/login")
     public Token login(Authentication authentication) {
         return loginService.login(authentication);
     }
-
-    // TODO
-    // logout
 }

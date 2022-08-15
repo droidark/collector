@@ -21,7 +21,7 @@ public class CollectionController {
     private CollectionService collectionService;
 
     @GetMapping
-    public @ResponseBody Page<Title> retrieveCollectedTitles(
+    public Page<Title> retrieveCollectedTitles(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             Authentication authentication) {
@@ -29,7 +29,7 @@ public class CollectionController {
     }
 
     @GetMapping("/{titleId}/issues")
-    public @ResponseBody Page<Issue> retrieveCollectedIssuesByTitleId(
+    public Page<Issue> retrieveCollectedIssuesByTitleId(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @PathVariable ObjectId titleId,
@@ -38,12 +38,12 @@ public class CollectionController {
     }
 
     @PostMapping
-    public @ResponseBody void addItemsToCollection(@RequestBody List<Item> items, Authentication authentication) {
+    public void addItemsToCollection(@RequestBody List<Item> items, Authentication authentication) {
         collectionService.addItemsToCollection(items, authentication.getName());
     }
 
     @DeleteMapping
-    public @ResponseBody void removeItemsToCollection(@RequestBody List<Item> items, Authentication authentication) {
+    public void removeItemsToCollection(@RequestBody List<Item> items, Authentication authentication) {
         collectionService.removeItemsToCollection(items, authentication.getName());
     }
 }
