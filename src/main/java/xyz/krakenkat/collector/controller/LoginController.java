@@ -1,6 +1,6 @@
 package xyz.krakenkat.collector.controller;
 
-import xyz.krakenkat.collector.domain.model.response.Token;
+import xyz.krakenkat.collector.dto.TokenDTO;
 import xyz.krakenkat.collector.service.LoginService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -14,7 +14,7 @@ public class LoginController {
     private LoginService loginService;
 
     @PostMapping("/login")
-    public Token login(Authentication authentication) {
+    public TokenDTO login(Authentication authentication) {
         return loginService.login(authentication);
     }
 }

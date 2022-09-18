@@ -1,17 +1,16 @@
 package xyz.krakenkat.collector.service;
 
-import xyz.krakenkat.collector.domain.model.Issue;
-import xyz.krakenkat.collector.domain.model.Item;
-import xyz.krakenkat.collector.domain.model.Title;
-import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import xyz.krakenkat.collector.dto.IssueDTO;
+import xyz.krakenkat.collector.dto.KeysDTO;
+import xyz.krakenkat.collector.dto.TitleDTO;
 
-import java.util.List;
+import java.util.Optional;
 
 public interface CollectionService {
-    Page<Title> getTitlesByUsername(String username, Pageable pageable);
-    Page<Issue> getIssuesByUsernameAndTitleId(String username, ObjectId titleId, Pageable pageable);
-    void addItemsToCollection(List<Item> items, String username);
-    void removeItemsToCollection(List<Item> items, String username);
+    Page<TitleDTO> getTitlesByUsername(String username, Pageable pageable);
+    Page<IssueDTO> getIssuesByUsernameAndTitleId(String username, Optional<String> publisherKey, String titleKey, boolean variant, Pageable pageable);
+    void addItemsToCollection(KeysDTO keysDTO, String username);
+    void removeItemsToCollection(KeysDTO keysDTO, String username);
 }

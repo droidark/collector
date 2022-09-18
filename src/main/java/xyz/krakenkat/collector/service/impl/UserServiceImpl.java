@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import xyz.krakenkat.collector.domain.model.User;
-import xyz.krakenkat.collector.domain.model.exception.FieldNotValidException;
+import xyz.krakenkat.collector.exception.FieldNotValidException;
 import xyz.krakenkat.collector.domain.repository.UserRepository;
 import xyz.krakenkat.collector.dto.UserDTO;
 import xyz.krakenkat.collector.service.UserService;

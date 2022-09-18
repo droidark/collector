@@ -4,10 +4,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import xyz.krakenkat.collector.domain.model.exception.NoContentException;
+import xyz.krakenkat.collector.exception.NoContentException;
 import xyz.krakenkat.collector.domain.repository.PublisherRepository;
 import xyz.krakenkat.collector.dto.PublisherDTO;
-import xyz.krakenkat.collector.mapper.Convert;
+import xyz.krakenkat.collector.util.Convert;
 import xyz.krakenkat.collector.service.PublisherService;
 
 @Service("publisherService")

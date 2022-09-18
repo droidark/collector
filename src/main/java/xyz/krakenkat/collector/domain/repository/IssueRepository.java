@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -20,6 +21,6 @@ public interface IssueRepository extends MongoRepository<Issue, String>, CustomI
     Optional<Issue> findOneByPublisherKeyAndTitleKeyAndIssueKey(String publisherKey, String titleKey, String issueKey);
     Page<Issue> findAllByVariantOfAndVariantIsTrue(ObjectId variantOf, Pageable pageable);
     Page<Issue> findAllVariantsByPublisherKeyAndTitleKeyAndIssueKey(String publisherKey, String titleKey, String issueKey, Pageable pageable);
-    Page<Issue> findAllByUsernameAndTitleId(String username, ObjectId titleId, Pageable pageable);
-    Ids findPublisherIdAndTitleByIssueId(ObjectId issueId);
+    Page<Issue> findAllByUsernameAndPublisherKeyAndTitleKey(String username, String publisherKey, String titleKey, boolean variant, Pageable pageable);
+    List<Ids> findIdsByKeys(String publisherKey, String titleKey, List<String> issueKeys);
 }

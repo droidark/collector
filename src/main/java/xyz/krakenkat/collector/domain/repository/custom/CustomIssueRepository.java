@@ -1,11 +1,11 @@
 package xyz.krakenkat.collector.domain.repository.custom;
 
-import xyz.krakenkat.collector.domain.model.Issue;
-import xyz.krakenkat.collector.domain.model.query.Ids;
-import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import xyz.krakenkat.collector.domain.model.Issue;
+import xyz.krakenkat.collector.domain.model.query.Ids;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface CustomIssueRepository {
@@ -23,7 +23,11 @@ public interface CustomIssueRepository {
             String issueKey,
             Pageable pageable);
 
-    Page<Issue> findAllByUsernameAndTitleId(String username, ObjectId titleId, Pageable pageable);
+    Page<Issue> findAllByUsernameAndPublisherKeyAndTitleKey(String username,
+                                                            String publisherKey,
+                                                            String titleKey,
+                                                            boolean variant,
+                                                            Pageable pageable);
 
-    Ids findPublisherIdAndTitleByIssueId(ObjectId issueId);
+    List<Ids> findIdsByKeys(String publisherKey, String titleKey, List<String> issueKeys);
 }

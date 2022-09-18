@@ -1,9 +1,5 @@
 package xyz.krakenkat.collector.exception;
 
-import xyz.krakenkat.collector.domain.model.exception.FieldNotValidException;
-import xyz.krakenkat.collector.domain.model.exception.NoContentException;
-import xyz.krakenkat.collector.domain.model.exception.PublisherKeyNotFoundException;
-import xyz.krakenkat.collector.domain.model.exception.TitleKeyNotFoundException;
 import xyz.krakenkat.collector.exception.response.Detail;
 import xyz.krakenkat.collector.exception.response.ExceptionResponse;
 import org.springframework.http.HttpStatus;

@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
-import xyz.krakenkat.collector.domain.model.exception.NoContentException;
+import xyz.krakenkat.collector.exception.NoContentException;
 import xyz.krakenkat.collector.dto.PublisherDTO;
 import xyz.krakenkat.collector.dto.TitleDTO;
 import xyz.krakenkat.collector.service.PublisherService;

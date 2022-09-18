@@ -1,4 +1,4 @@
-package xyz.krakenkat.collector.mapper;
+package xyz.krakenkat.collector.util;
 
 import xyz.krakenkat.collector.domain.model.Issue;
 import xyz.krakenkat.collector.domain.model.Publisher;
@@ -78,6 +78,5 @@ public final class Convert {
                 .url(socialNetwork.getUrl())
                 .build();
     }
-
     private Convert() {}
 }

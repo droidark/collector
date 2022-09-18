@@ -1,4 +1,4 @@
-package xyz.krakenkat.collector.domain.model.exception;
+package xyz.krakenkat.collector.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

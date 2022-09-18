@@ -1,13 +1,13 @@
-package xyz.krakenkat.collector.domain.model.exception;
+package xyz.krakenkat.collector.exception;
 
 
 import lombok.Getter;
 
 public class FieldNotValidException extends RuntimeException {
     @Getter
-    private String rejectedValue;
+    private final String rejectedValue;
     @Getter
-    private String field;
+    private final String field;
 
     public FieldNotValidException(String message, String rejectedValue, String field) {
         super(message);

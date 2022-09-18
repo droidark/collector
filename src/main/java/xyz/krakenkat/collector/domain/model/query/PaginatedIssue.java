@@ -1,9 +1,10 @@
-package xyz.krakenkat.collector.domain.model;
+package xyz.krakenkat.collector.domain.model.query;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import xyz.krakenkat.collector.domain.model.Issue;
 
 import java.util.List;
 import java.util.Map;

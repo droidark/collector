@@ -1,6 +1,6 @@
 package xyz.krakenkat.collector.service.impl;
 
-import xyz.krakenkat.collector.domain.model.response.Token;
+import xyz.krakenkat.collector.dto.TokenDTO;
 import xyz.krakenkat.collector.service.LoginService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -22,7 +22,7 @@ public class LoginServiceImpl implements LoginService {
     private JwtEncoder jwtEncoder;
 
     @Override
-    public Token login(Authentication authentication) {
+    public TokenDTO login(Authentication authentication) {
         Instant now = Instant.now();
         String scope = authentication
                 .getAuthorities()
@@ -41,7 +41,7 @@ public class LoginServiceImpl implements LoginService {
 
         Jwt jwt = jwtEncoder.encode(JwtEncoderParameters.from(claims));
 
-        return Token
+        return TokenDTO
                 .builder()
                 .accessToken(jwt.getTokenValue())
                 .tokenType("Bearer")

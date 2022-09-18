@@ -5,11 +5,11 @@ import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import xyz.krakenkat.collector.domain.model.exception.PublisherKeyNotFoundException;
-import xyz.krakenkat.collector.domain.model.exception.TitleKeyNotFoundException;
+import xyz.krakenkat.collector.exception.PublisherKeyNotFoundException;
+import xyz.krakenkat.collector.exception.TitleKeyNotFoundException;
 import xyz.krakenkat.collector.domain.repository.IssueRepository;
 import xyz.krakenkat.collector.dto.IssueDTO;
-import xyz.krakenkat.collector.mapper.Convert;
+import xyz.krakenkat.collector.util.Convert;
 import xyz.krakenkat.collector.service.IssueService;
 import xyz.krakenkat.collector.util.Constants;
 

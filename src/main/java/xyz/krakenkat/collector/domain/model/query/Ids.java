@@ -11,4 +11,5 @@ import org.bson.types.ObjectId;
 public class Ids {
     private ObjectId publisherId;
     private ObjectId titleId;
+    private ObjectId issueId;
 }

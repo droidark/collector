@@ -4,9 +4,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
-import xyz.krakenkat.collector.domain.model.exception.NoContentException;
-import xyz.krakenkat.collector.domain.model.exception.PublisherKeyNotFoundException;
-import xyz.krakenkat.collector.domain.model.exception.TitleKeyNotFoundException;
+import xyz.krakenkat.collector.exception.NoContentException;
+import xyz.krakenkat.collector.exception.PublisherKeyNotFoundException;
+import xyz.krakenkat.collector.exception.TitleKeyNotFoundException;
 import xyz.krakenkat.collector.dto.IssueDTO;
 import xyz.krakenkat.collector.service.IssueService;
 

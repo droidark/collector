@@ -1,27 +1,23 @@
 package xyz.krakenkat.collector.domain.repository.custom.impl;
 
-import xyz.krakenkat.collector.domain.model.Issue;
-import xyz.krakenkat.collector.domain.model.PaginatedIssue;
-import xyz.krakenkat.collector.domain.model.query.Ids;
-import xyz.krakenkat.collector.domain.repository.custom.CustomIssueRepository;
-import xyz.krakenkat.collector.util.Utilities;
 import lombok.AllArgsConstructor;
 import org.bson.Document;
-import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
-import org.springframework.data.mongodb.core.aggregation.FacetOperation;
-import org.springframework.data.mongodb.core.aggregation.LookupOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
+import xyz.krakenkat.collector.domain.model.Issue;
+import xyz.krakenkat.collector.domain.model.query.Ids;
+import xyz.krakenkat.collector.domain.model.query.PaginatedIssue;
+import xyz.krakenkat.collector.domain.repository.custom.CustomIssueRepository;
+import xyz.krakenkat.collector.util.Utilities;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
-
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.facet;
 
 @AllArgsConstructor
 public class CustomIssueRepositoryImpl implements CustomIssueRepository {
@@ -35,37 +31,17 @@ public class CustomIssueRepositoryImpl implements CustomIssueRepository {
             boolean variant,
             Pageable pageable) {
 
-        long skip = Utilities.getSkip(pageable);
-        long limit = pageable.getPageSize();
-
-        LookupOperation titleLookupOperation = LookupOperation.newLookup()
-                .from("title")
-                .localField("title")
-                .foreignField("_id")
-                .as("titleData");
-
-        LookupOperation publisherLookupOperation = LookupOperation.newLookup()
-                .from("publisher")
-                .localField("titleData.publisher")
-                .foreignField("_id")
-                .as("publisherData");
-
-        FacetOperation facetOperation = facet(
-                Aggregation.skip(skip),
-                Aggregation.limit(limit))
-                .as("resultData")
-                .and(Aggregation.count().as("TotalRecords"))
-                .as("pageInfo");
-
         Aggregation aggregation = Aggregation.newAggregation(
-                titleLookupOperation,
+                // TITLE LOOKUP
+                Utilities.buildLookUp("title", "title", "_id", "titleData"),
                 Aggregation.unwind("$titleData"),
-                publisherLookupOperation,Aggregation.unwind("$publisherData"),
+                // PUBLISHER LOOKUP
+                Utilities.buildLookUp("publisher", "titleData.publisher", "_id", "publisherData"),
                 Aggregation.match(Criteria
                         .where("publisherData.key").is(publisherKey)
                         .and("titleData.key").is(titleKey)
                         .and("variant").is(variant)),
-                facetOperation
+                Utilities.buildFacet(pageable)
         );
 
         AggregationResults<PaginatedIssue> result = mongoOperations.aggregate(aggregation, Issue.class, PaginatedIssue.class);
@@ -75,22 +51,13 @@ public class CustomIssueRepositoryImpl implements CustomIssueRepository {
 
     @Override
     public Optional<Issue> findOneByPublisherKeyAndTitleKeyAndIssueKey(String publisherKey, String titleKey, String issueKey) {
-        LookupOperation titleLookupOperation = LookupOperation.newLookup()
-                .from("title")
-                .localField("title")
-                .foreignField("_id")
-                .as("titleData");
-
-        LookupOperation publisherLookupOperation = LookupOperation.newLookup()
-                .from("publisher")
-                .localField("titleData.publisher")
-                .foreignField("_id")
-                .as("publisherData");
-
         Aggregation aggregation = Aggregation.newAggregation(
-                titleLookupOperation,
+                // TITLE LOOKUP
+                Utilities.buildLookUp("title", "title", "_id", "titleData"),
                 Aggregation.unwind("$titleData"),
-                publisherLookupOperation,Aggregation.unwind("$publisherData"),
+                // PUBLISHER LOOKUP
+                Utilities.buildLookUp("publisher", "titleData.publisher", "_id", "publisherData"),
+                Aggregation.unwind("$publisherData"),
                 Aggregation.match(Criteria
                         .where("publisherData.key").is(publisherKey)
                         .and("titleData.key").is(titleKey)
@@ -105,40 +72,19 @@ public class CustomIssueRepositoryImpl implements CustomIssueRepository {
 
     @Override
     public Page<Issue> findAllVariantsByPublisherKeyAndTitleKeyAndIssueKey(String publisherKey, String titleKey, String issueKey, Pageable pageable) {
-
-        long skip = Utilities.getSkip(pageable);
-        long limit = pageable.getPageSize();
-
-        LookupOperation titleLookupOperation = LookupOperation.newLookup()
-                .from("title")
-                .localField("title")
-                .foreignField("_id")
-                .as("titleData");
-
-        LookupOperation publisherLookupOperation = LookupOperation.newLookup()
-                .from("publisher")
-                .localField("titleData.publisher")
-                .foreignField("_id")
-                .as("publisherData");
-
-        FacetOperation facetOperation = facet(
-                Aggregation.skip(skip),
-                Aggregation.limit(limit))
-                .as("resultData")
-                .and(Aggregation.count().as("TotalRecords"))
-                .as("pageInfo");
-
         Aggregation aggregation = Aggregation.newAggregation(
-                titleLookupOperation,
+                // TITLE LOOKUP
+                Utilities.buildLookUp("title", "title", "_id", "titleData"),
                 Aggregation.unwind("$titleData"),
-                publisherLookupOperation,
+                // PUBLISHER LOOKUP
+                Utilities.buildLookUp("publisher", "titleData.publisher", "_id", "publisherData"),
                 Aggregation.unwind("$publisherData"),
                 Aggregation.match(Criteria
                         .where("publisherData.key").is(publisherKey)
                         .and("titleData.key").is(titleKey)
                         .and("key").is(issueKey)
                         .and("variant").is(true)),
-                facetOperation
+                Utilities.buildFacet(pageable)
         );
 
         AggregationResults<PaginatedIssue> result = mongoOperations.aggregate(aggregation, Issue.class, PaginatedIssue.class);
@@ -147,30 +93,23 @@ public class CustomIssueRepositoryImpl implements CustomIssueRepository {
     }
 
     @Override
-    public Page<Issue> findAllByUsernameAndTitleId(String username, ObjectId titleId, Pageable pageable) {
-        long skip = Utilities.getSkip(pageable);
-        long limit = pageable.getPageSize();
-
-        LookupOperation userLookupOperation = LookupOperation.newLookup()
-                .from("user")
-                .localField("_id")
-                .foreignField("items.issueId")
-                .as("userData");
-
-        FacetOperation facetOperation = facet(
-                Aggregation.skip(skip),
-                Aggregation.limit(limit))
-                .as("resultData")
-                .and(Aggregation.count().as("TotalRecords"))
-                .as("pageInfo");
-
+    public Page<Issue> findAllByUsernameAndPublisherKeyAndTitleKey(String username, String publisherKey, String titleKey, boolean variant, Pageable pageable) {
         Aggregation aggregation = Aggregation.newAggregation(
-                userLookupOperation,
+                // USER LOOKUP
+                Utilities.buildLookUp("user", "_id", "items.issueId", "userData"),
+                Aggregation.unwind("$userData"),
+                // TITLE LOOKUP
+                Utilities.buildLookUp("title", "title", "_id", "titleData"),
+                Aggregation.unwind("$titleData"),
+                // PUBLISHER LOOKUP
+                Utilities.buildLookUp("publisher", "titleData.publisher", "_id", "publisherData"),
+                Aggregation.unwind("$publisherData"),
                 Aggregation.match(Criteria
                         .where("userData.username").is(username)
-                        .and("title").is(titleId)
-                        .and("variant").is(false)),
-                facetOperation);
+                        .and("publisherData.key").is(publisherKey)
+                        .and("titleData.key").is(titleKey)
+                        .and("variant").is(variant)),
+                Utilities.buildFacet(pageable));
 
         AggregationResults<PaginatedIssue> results = mongoOperations.aggregate(aggregation, Issue.class, PaginatedIssue.class);
 
@@ -178,31 +117,26 @@ public class CustomIssueRepositoryImpl implements CustomIssueRepository {
     }
 
     @Override
-    public Ids findPublisherIdAndTitleByIssueId(ObjectId issueId) {
-        LookupOperation titleLookupOperation = LookupOperation.newLookup()
-                .from("title")
-                .localField("title")
-                .foreignField("_id")
-                .as("titleData");
-
-        LookupOperation publisherLookupOperation = LookupOperation.newLookup()
-                .from("publisher")
-                .localField("titleData.publisher")
-                .foreignField("_id")
-                .as("publisherData");
-
+    public List<Ids> findIdsByKeys(String publisherKey, String titleKey, List<String> issueKeys) {
         Aggregation aggregation = Aggregation.newAggregation(
-                titleLookupOperation,
+                // TITLE LOOKUP
+                Utilities.buildLookUp("title", "title", "_id", "titleData"),
                 Aggregation.unwind("$titleData"),
-                publisherLookupOperation,
+                // PUBLISHER LOOKUP
+                Utilities.buildLookUp("publisher", "titleData.publisher", "_id", "publisherData"),
                 Aggregation.unwind("$publisherData"),
-                Aggregation.match(Criteria.where("_id").is(issueId)),
-                Aggregation.replaceRoot().withDocument(new Document("publisherId", "$publisherData._id").append("titleId", "$titleData._id"))
+                Aggregation.match(Criteria
+                        .where("publisherData.key").is(publisherKey)
+                        .and("titleData.key").is(titleKey)
+                        .and("key").in(issueKeys)),
+                Aggregation.replaceRoot().withDocument(new Document("publisherId", "$publisherData._id")
+                        .append("titleId", "$titleData._id")
+                        .append("issueId", "$_id"))
         );
 
         AggregationResults<Ids> results = mongoOperations.aggregate(aggregation, Issue.class, Ids.class);
 
-        return results.getUniqueMappedResult();
+        return Optional.of(results.getMappedResults()).orElse(List.of());
     }
 
     private Page<Issue> buildPaginatedIssue(AggregationResults<PaginatedIssue> paginatedIssues, Pageable pageable) {

@@ -3,7 +3,7 @@ package xyz.krakenkat.collector.service;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import xyz.krakenkat.collector.domain.model.exception.PublisherKeyNotFoundException;
+import xyz.krakenkat.collector.exception.PublisherKeyNotFoundException;
 import xyz.krakenkat.collector.dto.IssueDTO;
 import xyz.krakenkat.collector.dto.TitleDTO;
 

@@ -1,4 +1,4 @@
-package xyz.krakenkat.collector.domain.model.response;
+package xyz.krakenkat.collector.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Token {
+public class TokenDTO {
     @JsonProperty("access_token")
     private String accessToken;
 
