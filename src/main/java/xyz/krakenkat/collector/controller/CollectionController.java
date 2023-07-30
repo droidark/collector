@@ -1,6 +1,6 @@
 package xyz.krakenkat.collector.controller;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
@@ -14,10 +14,10 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/collections")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CollectionController {
 
-    private CollectionService collectionService;
+    private final CollectionService collectionService;
 
     @GetMapping
     public Page<TitleDTO> retrieveCollectedTitles(

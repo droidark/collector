@@ -1,23 +1,23 @@
 package xyz.krakenkat.collector.controller;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
+import xyz.krakenkat.collector.dto.IssueDTO;
 import xyz.krakenkat.collector.exception.NoContentException;
 import xyz.krakenkat.collector.exception.PublisherKeyNotFoundException;
 import xyz.krakenkat.collector.exception.TitleKeyNotFoundException;
-import xyz.krakenkat.collector.dto.IssueDTO;
 import xyz.krakenkat.collector.service.IssueService;
 
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/issues")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class IssueController {
 
-    private IssueService issueService;
+    private final IssueService issueService;
 
     @GetMapping
     public Page<IssueDTO> retrieveAllIssues(

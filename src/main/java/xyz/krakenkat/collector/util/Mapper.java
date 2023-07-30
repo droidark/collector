@@ -10,10 +10,9 @@ import xyz.krakenkat.collector.dto.SocialNetworkDTO;
 import xyz.krakenkat.collector.dto.TitleDTO;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
-public final class Convert {
+public final class Mapper {
     public static PublisherDTO toPublisherDTO(Publisher publisher) {
         return PublisherDTO
                 .builder()
@@ -25,7 +24,7 @@ public final class Convert {
                 .socialNetworks(publisher
                         .getSocialNetworks()
                         .stream()
-                        .map(Convert::toSocialNetworkDTO)
+                        .map(Mapper::toSocialNetworkDTO)
                         .toList())
                 .build();
     }
@@ -37,8 +36,12 @@ public final class Convert {
                 .name(title.getName())
                 .cover(title.getCover())
                 .demography(title.getDemography())
+                .format(title.getFormat())
+                .type(title.getType())
+                .frequency(title.getFrequency())
                 .status(title.getStatus())
                 .genres(Optional.ofNullable(title.getGenres()).orElse(List.of()))
+                .authors(title.getAuthors())
                 .releaseDate(title.getReleaseDate())
                 .totalIssues(title.getTotalIssues())
                 .build();
@@ -59,14 +62,12 @@ public final class Convert {
                 .shortReview(issue.getShortReview())
                 .event(issue.getEvent())
                 .storyArch(issue.getStoryArch())
-                .isbn10(issue.getIsbn10())
-                .isbn13(issue.getIsbn13())
+                .isbn(issue.getIsbn())
                 .barcode(issue.getBarcode())
                 .edition(issue.getEdition())
                 .variant(issue.getVariant())
                 .likesCounter(issue.getLikesCounter())
                 .dislikesCounter(issue.getDislikesCounter())
-                .authors(Optional.ofNullable(issue.getAuthors()).orElse(Map.of()))
                 .build();
     }
 
@@ -78,5 +79,5 @@ public final class Convert {
                 .url(socialNetwork.getUrl())
                 .build();
     }
-    private Convert() {}
+    private Mapper() {}
 }

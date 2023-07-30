@@ -1,5 +1,6 @@
 package xyz.krakenkat.collector.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import xyz.krakenkat.collector.domain.model.User;
 import xyz.krakenkat.collector.domain.repository.UserRepository;
 import xyz.krakenkat.collector.util.Constants;
@@ -13,10 +14,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CustomUserDetailService implements UserDetailsService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
