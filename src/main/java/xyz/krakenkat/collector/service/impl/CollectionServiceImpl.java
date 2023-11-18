@@ -1,22 +1,22 @@
 package xyz.krakenkat.collector.service.impl;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import xyz.krakenkat.collector.domain.model.Item;
 import xyz.krakenkat.collector.domain.model.User;
-import xyz.krakenkat.collector.exception.PublisherKeyNotFoundException;
 import xyz.krakenkat.collector.domain.repository.IssueRepository;
 import xyz.krakenkat.collector.domain.repository.TitleRepository;
 import xyz.krakenkat.collector.domain.repository.UserRepository;
 import xyz.krakenkat.collector.dto.IssueDTO;
 import xyz.krakenkat.collector.dto.KeysDTO;
 import xyz.krakenkat.collector.dto.TitleDTO;
+import xyz.krakenkat.collector.exception.PublisherKeyNotFoundException;
 import xyz.krakenkat.collector.service.CollectionService;
 import xyz.krakenkat.collector.util.Constants;
-import xyz.krakenkat.collector.util.Convert;
+import xyz.krakenkat.collector.util.MapperService;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -25,16 +25,20 @@ import java.util.List;
 import java.util.Optional;
 
 @Service("collectionService")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CollectionServiceImpl implements CollectionService {
 
-    UserRepository userRepository;
-    TitleRepository titleRepository;
-    IssueRepository issueRepository;
+    private final UserRepository userRepository;
+
+    private final TitleRepository titleRepository;
+
+    private final IssueRepository issueRepository;
+
+    private final MapperService mapper;
 
     @Override
     public Page<TitleDTO> getTitlesByUsername(String username, Pageable pageable) {
-        return titleRepository.findAllByUsername(username, pageable).map(Convert::toTitleDTO);
+        return titleRepository.findAllByUsername(username, pageable).map(mapper::toTitleDTO);
     }
 
     @Override
@@ -44,7 +48,7 @@ public class CollectionServiceImpl implements CollectionService {
                 publisherKey.orElseThrow(() -> new PublisherKeyNotFoundException(Constants.PUBLISHER_KEY_NOT_FOUND_EXCEPTION_MESSAGE)),
                 titleKey,
                 variant,
-                pageable).map(Convert::toIssueDTO);
+                pageable).map(mapper::toIssueDTO);
     }
 
     @Override

@@ -1,24 +1,24 @@
 package xyz.krakenkat.collector.controller;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
-import xyz.krakenkat.collector.exception.NoContentException;
-import xyz.krakenkat.collector.exception.PublisherKeyNotFoundException;
 import xyz.krakenkat.collector.dto.IssueDTO;
 import xyz.krakenkat.collector.dto.TitleDTO;
+import xyz.krakenkat.collector.exception.NoContentException;
+import xyz.krakenkat.collector.exception.PublisherKeyNotFoundException;
 import xyz.krakenkat.collector.service.TitleService;
 
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/titles")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class TitleController {
 
-    private TitleService titleService;
+    private final TitleService titleService;
 
     @GetMapping
     public Page<TitleDTO> retrieveAllTitles(

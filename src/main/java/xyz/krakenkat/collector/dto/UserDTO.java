@@ -1,16 +1,16 @@
 package xyz.krakenkat.collector.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import xyz.krakenkat.collector.util.Constants;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import java.util.List;
 
 @Data
@@ -20,13 +20,13 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDTO {
     @NotNull
-    @NotBlank(message = "username shouldn't be blank")
+    @NotBlank(message = Constants.USERNAME_BLANK)
     @Pattern(regexp = Constants.USERNAME_REGEX,
             message = Constants.USERNAME_EXCEPTION_MESSAGE)
     private String username;
 
     @NotNull
-    @NotBlank(message = "Password shouldn't be blank")
+    @NotBlank(message = Constants.USERNAME_BLANK)
     @Pattern(regexp = Constants.PASSWORD_REGEX,
             message = Constants.PASSWORD_EXCEPTION_MESSAGE)
     private String password;

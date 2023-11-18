@@ -1,24 +1,26 @@
 package xyz.krakenkat.collector.service.impl;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import xyz.krakenkat.collector.domain.model.User;
-import xyz.krakenkat.collector.exception.FieldNotValidException;
 import xyz.krakenkat.collector.domain.repository.UserRepository;
 import xyz.krakenkat.collector.dto.UserDTO;
+import xyz.krakenkat.collector.exception.FieldNotValidException;
 import xyz.krakenkat.collector.service.UserService;
 import xyz.krakenkat.collector.util.Constants;
 
-import java.sql.Date;
 import java.time.Instant;
+import java.util.Date;
 
 @Service("userService")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private PasswordEncoder passwordEncoder;
-    private UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+
+    private final Date signUpDate = Date.from(Instant.now());
 
     @Override
     public UserDTO signUp(UserDTO userDTO) {
@@ -42,7 +44,7 @@ public class UserServiceImpl implements UserService {
                 .avatar(Constants.DEFAULT_AVATAR)
                 .cover(Constants.DEFAULT_COVER)
                 .aboutYou(Constants.DEFAULT_ABOUT_YOU)
-                .signUpDate(Date.from(Instant.now()))
+                .signUpDate(signUpDate)
                 .status(Constants.DEFAULT_STATUS)
                 .profile(Constants.DEFAULT_PROFILE)
                 .build());

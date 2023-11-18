@@ -28,13 +28,11 @@ public class IssueDTO {
     private String shortReview;
     private String event;
     private String storyArch;
-    private String isbn10;
-    private String isbn13;
+    private String isbn;
     private Long barcode;
     private Integer edition;
     private Boolean variant;
     private Integer likesCounter;
     private Integer dislikesCounter;
     private List<LikeDTO> likes;
-    private Map<String, String> authors;
 }

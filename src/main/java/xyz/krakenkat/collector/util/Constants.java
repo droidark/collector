@@ -2,6 +2,8 @@ package xyz.krakenkat.collector.util;
 
 public final class Constants {
 
+    public static final String USERNAME_BLANK = "username shouldn't be blank";
+
     public static final String USERNAME_REGEX = "^(?=.{4,20}$)(?![_.0-9])(?!.*[_.]{2})[a-z0-9._]+(?<![_.])$";
     public static final String USERNAME_EXCEPTION_MESSAGE = "The username must have at least 4 characters in length, must be in lowercase and it can include underscores";
     public static final String USERNAME_ALREADY_EXISTS_EXCEPTION_MESSAGE = "The given username already exists";

@@ -1,22 +1,23 @@
 package xyz.krakenkat.collector.controller;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
-import xyz.krakenkat.collector.exception.NoContentException;
 import xyz.krakenkat.collector.dto.PublisherDTO;
 import xyz.krakenkat.collector.dto.TitleDTO;
+import xyz.krakenkat.collector.exception.NoContentException;
 import xyz.krakenkat.collector.service.PublisherService;
 import xyz.krakenkat.collector.service.TitleService;
 
 @RestController
 @RequestMapping("/publishers")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PublisherController {
 
-    private PublisherService publisherService;
-    private TitleService titleService;
+    private final PublisherService publisherService;
+
+    private final TitleService titleService;
 
     @GetMapping
     public Page<PublisherDTO> retrieveAllPublishers(

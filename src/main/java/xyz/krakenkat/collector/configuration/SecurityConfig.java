@@ -14,6 +14,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -53,19 +54,16 @@ public class SecurityConfig {
         authenticationManager = authenticationManagerBuilder.build();
 
         return http
-                .csrf()
-                .disable()
-                .cors()
-                .disable()
-                .authorizeHttpRequests()
-                .antMatchers("/login", "/signup")
-                .permitAll()
-                .anyRequest()
-                .authenticated()
-                .and()
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(authorizeRequests -> authorizeRequests
+                        .requestMatchers("/login", "/signup")
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated())
                 .authenticationManager(authenticationManager)
                 .httpBasic(Customizer.withDefaults())
-                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
+                .oauth2ResourceServer((oauth2ResourceServer) -> oauth2ResourceServer.jwt((jwt) -> jwt.decoder(jwtDecoder())))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(exceptions -> exceptions
                         .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())

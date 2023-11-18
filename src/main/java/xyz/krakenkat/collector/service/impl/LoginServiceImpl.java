@@ -1,8 +1,6 @@
 package xyz.krakenkat.collector.service.impl;
 
-import xyz.krakenkat.collector.dto.TokenDTO;
-import xyz.krakenkat.collector.service.LoginService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -10,16 +8,18 @@ import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
+import xyz.krakenkat.collector.dto.TokenDTO;
+import xyz.krakenkat.collector.service.LoginService;
 
 import java.time.Instant;
 import java.util.stream.Collectors;
 
 @Service("loginService")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class LoginServiceImpl implements LoginService {
 
     private static final long EXPIRY = 3600L;
-    private JwtEncoder jwtEncoder;
+    private final JwtEncoder jwtEncoder;
 
     @Override
     public TokenDTO login(Authentication authentication) {
