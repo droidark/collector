@@ -1,6 +1,6 @@
 package xyz.krakenkat.collector.domain.repository.custom.impl;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -16,10 +16,10 @@ import xyz.krakenkat.collector.util.Utilities;
 import java.util.Collections;
 import java.util.Optional;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CustomTitleRepositoryImpl implements CustomTitleRepository {
 
-    private MongoOperations mongoOperations;
+    private final MongoOperations mongoOperations;
 
     @Override
     public Page<Title> findAllByPublisherKey(String publisherKey, Pageable pageable) {
@@ -27,6 +27,7 @@ public class CustomTitleRepositoryImpl implements CustomTitleRepository {
                 // PUBLISHER LOOKUP
                 Utilities.buildLookUp("publisher", "publisher", "_id", "publisherData"),
                 Aggregation.match(Criteria.where("publisherData.key").is(publisherKey)),
+                Aggregation.sort(pageable.getSort()),
                 Utilities.buildFacet(pageable));
 
         AggregationResults<PaginatedTitle> result = mongoOperations.aggregate(aggregation, Title.class, PaginatedTitle.class);

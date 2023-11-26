@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import xyz.krakenkat.collector.dto.IssueDTO;
 import xyz.krakenkat.collector.dto.TitleDTO;
@@ -21,25 +22,25 @@ public class TitleController {
     private final TitleService titleService;
 
     @GetMapping
-    public Page<TitleDTO> retrieveAllTitles(
+    public ResponseEntity<Page<TitleDTO>> retrieveAllTitles(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        return titleService.getAllTitles(PageRequest.of(page, size));
+        return ResponseEntity.ok(titleService.getAllTitles(PageRequest.of(page, size)));
     }
 
     @GetMapping("/{id}")
-    public TitleDTO retrieveTitleById(
+    public ResponseEntity<TitleDTO> retrieveTitleById(
             @PathVariable String id,
             @RequestParam(name = "publisher", required = false) Optional<String> publisherKey)
             throws PublisherKeyNotFoundException {
-        return titleService.getTitleByKey(id, publisherKey).orElseThrow(NoContentException::new);
+        return ResponseEntity.ok(titleService.getTitleByKey(id, publisherKey).orElseThrow(NoContentException::new));
     }
 
     @GetMapping("/{id}/issues")
-    public Page<IssueDTO> retrieveIssuesByTitleId(
+    public ResponseEntity<Page<IssueDTO>> retrieveIssuesByTitleId(
             @PathVariable ObjectId id,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        return titleService.getAllIssuesByTitle(id, PageRequest.of(page, size));
+        return ResponseEntity.ok(titleService.getAllIssuesByTitle(id, PageRequest.of(page, size)));
     }
 }

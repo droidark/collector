@@ -42,7 +42,7 @@ public class CollectionServiceImpl implements CollectionService {
     }
 
     @Override
-    public Page<IssueDTO> getIssuesByUsernameAndTitleId(String username, Optional<String> publisherKey, String titleKey, boolean variant, Pageable pageable) {
+    public Page<IssueDTO> getIssuesByUsernameAndTitleKey(String username, Optional<String> publisherKey, String titleKey, boolean variant, Pageable pageable) {
         return issueRepository.findAllByUsernameAndPublisherKeyAndTitleKey(
                 username,
                 publisherKey.orElseThrow(() -> new PublisherKeyNotFoundException(Constants.PUBLISHER_KEY_NOT_FOUND_EXCEPTION_MESSAGE)),

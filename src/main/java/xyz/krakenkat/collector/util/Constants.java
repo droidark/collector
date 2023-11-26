@@ -3,7 +3,6 @@ package xyz.krakenkat.collector.util;
 public final class Constants {
 
     public static final String USERNAME_BLANK = "username shouldn't be blank";
-
     public static final String USERNAME_REGEX = "^(?=.{4,20}$)(?![_.0-9])(?!.*[_.]{2})[a-z0-9._]+(?<![_.])$";
     public static final String USERNAME_EXCEPTION_MESSAGE = "The username must have at least 4 characters in length, must be in lowercase and it can include underscores";
     public static final String USERNAME_ALREADY_EXISTS_EXCEPTION_MESSAGE = "The given username already exists";
@@ -18,6 +17,10 @@ public final class Constants {
     public static final String DEFAULT_ABOUT_YOU = "Nothing to say yet";
     public static final String DEFAULT_STATUS = "PENDING";
     public static final String DEFAULT_PROFILE = "USER";
+    public static final String PAGE_DESCRIPTION = "Zero based page index (0... N)";
+    public static final String SIZE_DESCRIPTION = "Number of records per page";
+    public static final String SORT_DESCRIPTION = "Sorting criteria in the format: property(,asc|desc). Default sort " +
+            "order is ascending. Multiple sort criteria are supported.";
 
     private Constants() {}
 

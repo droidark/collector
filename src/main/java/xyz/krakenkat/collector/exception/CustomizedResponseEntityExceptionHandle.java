@@ -1,5 +1,6 @@
 package xyz.krakenkat.collector.exception;
 
+import org.springframework.security.access.AccessDeniedException;
 import xyz.krakenkat.collector.exception.response.Detail;
 import xyz.krakenkat.collector.exception.response.ExceptionResponse;
 import org.springframework.http.HttpStatus;
@@ -31,6 +32,19 @@ public class CustomizedResponseEntityExceptionHandle {
                         .build()))
                 .build();
         return ResponseEntity.internalServerError().body(exceptionResponse);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public final ResponseEntity<ExceptionResponse> handleAccessDeniedException(WebRequest request) {
+        ExceptionResponse exceptionResponse = ExceptionResponse
+                .builder().error(HttpStatus.FORBIDDEN.toString())
+                .timestamp(Date.from(Instant.now()))
+                .detail(List.of(Detail
+                        .builder()
+                        .message(request.getDescription(false))
+                        .build()))
+                .build();
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(exceptionResponse);
     }
 
     @ExceptionHandler(NoContentException.class)

@@ -3,10 +3,9 @@ package xyz.krakenkat.collector.exception;
 
 import lombok.Getter;
 
+@Getter
 public class FieldNotValidException extends RuntimeException {
-    @Getter
     private final String rejectedValue;
-    @Getter
     private final String field;
 
     public FieldNotValidException(String message, String rejectedValue, String field) {
