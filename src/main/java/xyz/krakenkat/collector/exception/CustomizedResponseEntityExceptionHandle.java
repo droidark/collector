@@ -1,6 +1,7 @@
 package xyz.krakenkat.collector.exception;
 
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import xyz.krakenkat.collector.exception.response.Detail;
 import xyz.krakenkat.collector.exception.response.ExceptionResponse;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.web.context.request.WebRequest;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @ControllerAdvice
 @RestController
@@ -52,6 +54,22 @@ public class CustomizedResponseEntityExceptionHandle {
         return ResponseEntity.noContent().build();
     }
 
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public final ResponseEntity<ExceptionResponse> handleMissingServletRequestParameterException(MissingServletRequestParameterException ex) {
+        ExceptionResponse exceptionResponse = ExceptionResponse
+                .builder()
+                .timestamp(Date.from(Instant.now()))
+                .error(HttpStatus.BAD_REQUEST.toString())
+                .detail(List.of(Detail
+                        .builder()
+                        .message(ex.getMessage())
+                        .rejectedValue("Missing value.")
+                        .field(ex.getParameterName())
+                        .build()))
+                .build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionResponse);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public final ResponseEntity<ExceptionResponse> handleValidationException(MethodArgumentNotValidException ex) {
         ExceptionResponse exceptionResponse = ExceptionResponse
@@ -63,7 +81,7 @@ public class CustomizedResponseEntityExceptionHandle {
                         .stream().map(error -> Detail
                                 .builder()
                                 .message(error.getDefaultMessage())
-                                .rejectedValue(error.getRejectedValue().toString())
+                                .rejectedValue(Objects.requireNonNull(error.getRejectedValue()).toString())
                                 .field(error.getField())
                                 .build()).toList())
                 .build();

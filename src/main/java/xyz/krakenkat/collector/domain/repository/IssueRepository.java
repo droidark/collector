@@ -16,8 +16,7 @@ import java.util.Optional;
 public interface IssueRepository extends MongoRepository<Issue, String>, CustomIssueRepository {
 
     Page<Issue> findAll(Pageable pageable);
-    Page<Issue> findAllByTitle(ObjectId titleId, Pageable pageable);
-    Page<Issue> findAllByPublisherKeyAndTitleKey(String publisherKey, String titleKey, boolean variant, Pageable pageable);
+    Page<Issue> findAllByPublisherKeyAndTitleKey(String publisherKey, String titleKey, String variant, Pageable pageable);
     Optional<Issue> findOneByPublisherKeyAndTitleKeyAndIssueKey(String publisherKey, String titleKey, String issueKey);
     Page<Issue> findAllByVariantOfAndVariantIsTrue(ObjectId variantOf, Pageable pageable);
     Page<Issue> findAllVariantsByPublisherKeyAndTitleKeyAndIssueKey(String publisherKey, String titleKey, String issueKey, Pageable pageable);

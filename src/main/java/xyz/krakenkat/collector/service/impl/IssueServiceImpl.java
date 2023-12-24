@@ -26,7 +26,7 @@ public class IssueServiceImpl implements IssueService {
     @Override
     public Page<IssueDTO> getIssuesByPublisherKeyAndTitleKey(Optional<String> publisherKey,
                                                              Optional<String> titleKey,
-                                                             boolean variant,
+                                                             String variant,
                                                              Pageable pageable) throws PublisherKeyNotFoundException, TitleKeyNotFoundException {
         return (publisherKey.isEmpty() && titleKey.isEmpty())
                 ? issueRepository.findAll(pageable).map(mapper::toIssueDTO)

@@ -1,57 +1,17 @@
 package xyz.krakenkat.collector.controller;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
 import xyz.krakenkat.collector.dto.IssueDTO;
-import xyz.krakenkat.collector.exception.NoContentException;
-import xyz.krakenkat.collector.exception.PublisherKeyNotFoundException;
-import xyz.krakenkat.collector.exception.TitleKeyNotFoundException;
-import xyz.krakenkat.collector.service.IssueService;
 
-import java.util.Optional;
-
-@RestController
+@Tag(name = "Issue", description = "Issue API to execute CRUD operations")
 @RequestMapping("/issues")
-@RequiredArgsConstructor
-public class IssueController {
+public interface IssueController {
 
-    private final IssueService issueService;
+    ResponseEntity<IssueDTO> retrieveIssueByPublisherKeyTitleKeyAndIssueKey(
+            String publisherKey,
+            String titleKey,
+            String issueKey);
 
-    @GetMapping
-    public ResponseEntity<Page<IssueDTO>> retrieveAllIssues(
-            @RequestParam(name = "publisher", required = false) Optional<String> publisherKey,
-            @RequestParam(name = "title", required = false) Optional<String> titleKey,
-            @RequestParam(name = "variant", required = false, defaultValue = "false") boolean variant,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) throws PublisherKeyNotFoundException, TitleKeyNotFoundException {
-        return ResponseEntity.ok(issueService
-                .getIssuesByPublisherKeyAndTitleKey(publisherKey, titleKey, variant, PageRequest.of(page, size)));
-    }
-
-    @GetMapping("/{key}")
-    public ResponseEntity<IssueDTO> retrieveIssueById(
-            @PathVariable String key,
-            @RequestParam(name = "publisher", required = false) Optional<String> publisherKey,
-            @RequestParam(name = "title", required = false) Optional<String> titleKey) throws
-            PublisherKeyNotFoundException,
-            TitleKeyNotFoundException, NoContentException {
-        return ResponseEntity.ok(issueService.getIssueByPublisherKeyAndTitleKeyAndIssueKey(publisherKey, titleKey, key)
-                .orElseThrow(NoContentException::new));
-    }
-
-    @GetMapping("/{key}/variants")
-    public ResponseEntity<Page<IssueDTO>> retrieveVariantIssuesById(
-            @PathVariable String key,
-            @RequestParam(name = "publisher", required = false) Optional<String> publisherKey,
-            @RequestParam(name = "title", required = false) Optional<String> titleKey,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) throws
-            PublisherKeyNotFoundException,
-            TitleKeyNotFoundException{
-        return ResponseEntity.ok(issueService.getVariantIssuesByPublisherKeyAndTitleKeyAndIssueKey(publisherKey,
-                titleKey, key, PageRequest.of(page, size)));
-    }
 }

@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface IssueService {
     Page<IssueDTO> getIssuesByPublisherKeyAndTitleKey(Optional<String> publisherKey,
                                                       Optional<String> titleKey,
-                                                      boolean variant,
+                                                      String variant,
                                                       Pageable pageable);
 
     Optional<IssueDTO> getIssueByPublisherKeyAndTitleKeyAndIssueKey(Optional<String> publisherKey,

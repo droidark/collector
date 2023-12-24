@@ -33,5 +33,6 @@ public class PublisherDTO {
     @Schema(description = "Publisher general information", example = "Small manga and light-novel publisher")
     private String information;
 
+    @Schema(description = "List of publisher social networks.")
     private List<SocialNetworkDTO> socialNetworks;
 }

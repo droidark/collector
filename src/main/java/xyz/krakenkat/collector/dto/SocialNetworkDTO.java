@@ -12,9 +12,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Schema(description = "List with all known publisher social networks")
+@Schema(description = "Social Network DTO")
 public class SocialNetworkDTO {
+
+    @Schema(description = "Key to identify the social network. This key is composed ty two lowercase letters.", example = "fb")
     private String key;
+
+    @Schema(description = "Username displayed in the social network.", example = "foo")
     private String nickname;
+
+    @Schema(description = "URL to access the social network.", example = "https://www.facebook.com/foo")
     private String url;
 }

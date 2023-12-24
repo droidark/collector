@@ -1,6 +1,6 @@
 package xyz.krakenkat.collector.domain.repository.custom.impl;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.bson.Document;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.aggregation.MatchOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import xyz.krakenkat.collector.domain.model.Issue;
 import xyz.krakenkat.collector.domain.model.query.Ids;
@@ -19,16 +20,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CustomIssueRepositoryImpl implements CustomIssueRepository {
 
-    private MongoOperations mongoOperations;
+    private final MongoOperations mongoOperations;
 
     @Override
     public Page<Issue> findAllByPublisherKeyAndTitleKey(
             String publisherKey,
             String titleKey,
-            boolean variant,
+            String variant,
             Pageable pageable) {
 
         Aggregation aggregation = Aggregation.newAggregation(
@@ -37,10 +38,8 @@ public class CustomIssueRepositoryImpl implements CustomIssueRepository {
                 Aggregation.unwind("$titleData"),
                 // PUBLISHER LOOKUP
                 Utilities.buildLookUp("publisher", "titleData.publisher", "_id", "publisherData"),
-                Aggregation.match(Criteria
-                        .where("publisherData.key").is(publisherKey)
-                        .and("titleData.key").is(titleKey)
-                        .and("variant").is(variant)),
+                buildVariantMatch(publisherKey, titleKey, variant),
+                Aggregation.sort(pageable.getSort()),
                 Utilities.buildFacet(pageable)
         );
 
@@ -154,5 +153,17 @@ public class CustomIssueRepositoryImpl implements CustomIssueRepository {
                 pageable,
                 result.getPageInfo().get(0).get("TotalRecords"))
                 : Page.empty();
+    }
+
+    private MatchOperation buildVariantMatch(String publisherKey, String titleKey, String variant) {
+        if (variant.equalsIgnoreCase("true") | variant.equalsIgnoreCase("false")) {
+            return Aggregation.match(Criteria
+                    .where("publisherData.key").is(publisherKey)
+                    .and("titleData.key").is(titleKey)
+                    .and("variant").is(Boolean.valueOf(variant)));
+        }
+        return Aggregation.match(Criteria
+                .where("publisherData.key").is(publisherKey)
+                .and("titleData.key").is(titleKey));
     }
 }

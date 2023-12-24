@@ -9,8 +9,8 @@ public final class Constants {
     public static final String EMAIL_ALREADY_EXISTS_EXCEPTION_MESSAGE = "The given email already exists";
     public static final String PASSWORD_REGEX = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$";
     public static final String PASSWORD_EXCEPTION_MESSAGE = "Password must have at least 8 characters in length, include at least one number and one special character";
-    public static final String PUBLISHER_KEY_NOT_FOUND_EXCEPTION_MESSAGE = "Publisher Key must be either present or be valid";
-    public static final String TITLE_KEY_NOT_FOUND_EXCEPTION_MESSAGE = "Title Key must be either present or be valid";
+    public static final String PUBLISHER_KEY_NOT_FOUND_EXCEPTION_MESSAGE = "Publisher key must be either present or be valid";
+    public static final String TITLE_KEY_NOT_FOUND_EXCEPTION_MESSAGE = "Title key must be either present or be valid";
     public static final String USER_NOT_FOUND_EXCEPTION_MESSAGE = "The username %s doesn't exist";
     public static final String DEFAULT_AVATAR = "default-avatar.png";
     public static final String DEFAULT_COVER = "default-cover.png";

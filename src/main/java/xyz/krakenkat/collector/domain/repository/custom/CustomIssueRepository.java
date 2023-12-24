@@ -12,7 +12,7 @@ public interface CustomIssueRepository {
     Page<Issue> findAllByPublisherKeyAndTitleKey(
             String publisherKey,
             String titleKey,
-            boolean variant,
+            String variant,
             Pageable pageable);
 
     Optional<Issue> findOneByPublisherKeyAndTitleKeyAndIssueKey(String publisherKey, String titleKey, String issueKey);

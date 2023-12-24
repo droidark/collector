@@ -12,9 +12,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import xyz.krakenkat.collector.dto.PublisherDTO;
 import xyz.krakenkat.collector.dto.TitleDTO;
 import xyz.krakenkat.collector.exception.NoContentException;
@@ -33,7 +34,7 @@ public interface PublisherController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Successful operation",
-                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = PublisherDTO.class)), mediaType = "application/json")),
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = PublisherDTO.class)), mediaType = MediaType.APPLICATION_JSON_VALUE)),
             @ApiResponse(
                     responseCode = "401",
                     description = "Unauthorized",
@@ -44,7 +45,7 @@ public interface PublisherController {
     ResponseEntity<Page<PublisherDTO>> retrieveAllPublishers(
             @Parameter(description = Constants.PAGE_DESCRIPTION) @RequestParam(defaultValue = "0") int page,
             @Parameter(description = Constants.SIZE_DESCRIPTION) @RequestParam(defaultValue = "10") int size,
-            @Parameter(description = Constants.SORT_DESCRIPTION) @RequestParam(defaultValue = "name,desc") String[] sort);
+            @Parameter(description = Constants.SORT_DESCRIPTION) @RequestParam(defaultValue = "name,asc") String[] sort);
 
     @Operation(
             summary = "Get publisher by key",
@@ -55,7 +56,7 @@ public interface PublisherController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Successful operation",
-                    content = @Content(schema = @Schema(implementation = PublisherDTO.class), mediaType = "application/json")),
+                    content = @Content(schema = @Schema(implementation = PublisherDTO.class), mediaType = MediaType.APPLICATION_JSON_VALUE)),
             @ApiResponse(
                     responseCode = "204",
                     description = "No Content",
@@ -79,7 +80,7 @@ public interface PublisherController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Successful operation",
-                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = TitleDTO.class)), mediaType = "application/json")),
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = TitleDTO.class)), mediaType = MediaType.APPLICATION_JSON_VALUE)),
             @ApiResponse(
                     responseCode = "401",
                     description = "Unauthorized",
