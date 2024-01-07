@@ -15,19 +15,19 @@ public interface CustomIssueRepository {
             String variant,
             Pageable pageable);
 
-    Optional<Issue> findOneByPublisherKeyAndTitleKeyAndIssueKey(String publisherKey, String titleKey, String issueKey);
-
-    Page<Issue> findAllVariantsByPublisherKeyAndTitleKeyAndIssueKey(
+    Page<Issue> findAllByPublisherKeyAndTitleKeyAndIssueKey(
             String publisherKey,
             String titleKey,
             String issueKey,
+            String variant,
             Pageable pageable);
 
-    Page<Issue> findAllByUsernameAndPublisherKeyAndTitleKey(String username,
-                                                            String publisherKey,
-                                                            String titleKey,
-                                                            boolean variant,
-                                                            Pageable pageable);
+    Page<Issue> findAllByUsernameAndPublisherKeyAndTitleKey(
+            String username,
+            String publisherKey,
+            String titleKey,
+            boolean variant,
+            Pageable pageable);
 
     List<Ids> findIdsByKeys(String publisherKey, String titleKey, List<String> issueKeys);
 }

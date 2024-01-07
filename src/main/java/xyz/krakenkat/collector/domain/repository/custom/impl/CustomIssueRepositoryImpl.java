@@ -14,11 +14,13 @@ import xyz.krakenkat.collector.domain.model.Issue;
 import xyz.krakenkat.collector.domain.model.query.Ids;
 import xyz.krakenkat.collector.domain.model.query.PaginatedIssue;
 import xyz.krakenkat.collector.domain.repository.custom.CustomIssueRepository;
-import xyz.krakenkat.collector.util.Utilities;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
+import static xyz.krakenkat.collector.util.Utilities.buildFacet;
+import static xyz.krakenkat.collector.util.Utilities.buildLookUp;
 
 @RequiredArgsConstructor
 public class CustomIssueRepositoryImpl implements CustomIssueRepository {
@@ -34,13 +36,13 @@ public class CustomIssueRepositoryImpl implements CustomIssueRepository {
 
         Aggregation aggregation = Aggregation.newAggregation(
                 // TITLE LOOKUP
-                Utilities.buildLookUp("title", "title", "_id", "titleData"),
+                buildLookUp("title", "title", "_id", "titleData"),
                 Aggregation.unwind("$titleData"),
                 // PUBLISHER LOOKUP
-                Utilities.buildLookUp("publisher", "titleData.publisher", "_id", "publisherData"),
+                buildLookUp("publisher", "titleData.publisher", "_id", "publisherData"),
                 buildVariantMatch(publisherKey, titleKey, variant),
                 Aggregation.sort(pageable.getSort()),
-                Utilities.buildFacet(pageable)
+                buildFacet(pageable)
         );
 
         AggregationResults<PaginatedIssue> result = mongoOperations.aggregate(aggregation, Issue.class, PaginatedIssue.class);
@@ -49,66 +51,42 @@ public class CustomIssueRepositoryImpl implements CustomIssueRepository {
     }
 
     @Override
-    public Optional<Issue> findOneByPublisherKeyAndTitleKeyAndIssueKey(String publisherKey, String titleKey, String issueKey) {
+    public Page<Issue> findAllByPublisherKeyAndTitleKeyAndIssueKey(String publisherKey, String titleKey, String issueKey, String variant, Pageable pageable) {
         Aggregation aggregation = Aggregation.newAggregation(
                 // TITLE LOOKUP
-                Utilities.buildLookUp("title", "title", "_id", "titleData"),
+                buildLookUp("title", "title", "_id", "titleData"),
                 Aggregation.unwind("$titleData"),
                 // PUBLISHER LOOKUP
-                Utilities.buildLookUp("publisher", "titleData.publisher", "_id", "publisherData"),
+                buildLookUp("publisher", "titleData.publisher", "_id", "publisherData"),
                 Aggregation.unwind("$publisherData"),
-                Aggregation.match(Criteria
-                        .where("publisherData.key").is(publisherKey)
-                        .and("titleData.key").is(titleKey)
-                        .and("key").is(issueKey)
-                        .and("variant").is(false))
-        );
-
-        AggregationResults<Issue> results = mongoOperations.aggregate(aggregation, Issue.class, Issue.class);
-
-        return Optional.ofNullable(results.getUniqueMappedResult());
-    }
-
-    @Override
-    public Page<Issue> findAllVariantsByPublisherKeyAndTitleKeyAndIssueKey(String publisherKey, String titleKey, String issueKey, Pageable pageable) {
-        Aggregation aggregation = Aggregation.newAggregation(
-                // TITLE LOOKUP
-                Utilities.buildLookUp("title", "title", "_id", "titleData"),
-                Aggregation.unwind("$titleData"),
-                // PUBLISHER LOOKUP
-                Utilities.buildLookUp("publisher", "titleData.publisher", "_id", "publisherData"),
-                Aggregation.unwind("$publisherData"),
-                Aggregation.match(Criteria
-                        .where("publisherData.key").is(publisherKey)
-                        .and("titleData.key").is(titleKey)
-                        .and("key").is(issueKey)
-                        .and("variant").is(true)),
-                Utilities.buildFacet(pageable)
+                buildVariantMatch(publisherKey, titleKey, issueKey, variant),
+                Aggregation.sort(pageable.getSort()),
+                buildFacet(pageable)
         );
 
         AggregationResults<PaginatedIssue> result = mongoOperations.aggregate(aggregation, Issue.class, PaginatedIssue.class);
 
-        return this.buildPaginatedIssue(result, pageable);
+        return buildPaginatedIssue(result, pageable);
     }
 
     @Override
     public Page<Issue> findAllByUsernameAndPublisherKeyAndTitleKey(String username, String publisherKey, String titleKey, boolean variant, Pageable pageable) {
         Aggregation aggregation = Aggregation.newAggregation(
                 // USER LOOKUP
-                Utilities.buildLookUp("user", "_id", "items.issueId", "userData"),
+                buildLookUp("user", "_id", "items.issueId", "userData"),
                 Aggregation.unwind("$userData"),
                 // TITLE LOOKUP
-                Utilities.buildLookUp("title", "title", "_id", "titleData"),
+                buildLookUp("title", "title", "_id", "titleData"),
                 Aggregation.unwind("$titleData"),
                 // PUBLISHER LOOKUP
-                Utilities.buildLookUp("publisher", "titleData.publisher", "_id", "publisherData"),
+                buildLookUp("publisher", "titleData.publisher", "_id", "publisherData"),
                 Aggregation.unwind("$publisherData"),
                 Aggregation.match(Criteria
                         .where("userData.username").is(username)
                         .and("publisherData.key").is(publisherKey)
                         .and("titleData.key").is(titleKey)
                         .and("variant").is(variant)),
-                Utilities.buildFacet(pageable));
+                buildFacet(pageable));
 
         AggregationResults<PaginatedIssue> results = mongoOperations.aggregate(aggregation, Issue.class, PaginatedIssue.class);
 
@@ -119,10 +97,10 @@ public class CustomIssueRepositoryImpl implements CustomIssueRepository {
     public List<Ids> findIdsByKeys(String publisherKey, String titleKey, List<String> issueKeys) {
         Aggregation aggregation = Aggregation.newAggregation(
                 // TITLE LOOKUP
-                Utilities.buildLookUp("title", "title", "_id", "titleData"),
+                buildLookUp("title", "title", "_id", "titleData"),
                 Aggregation.unwind("$titleData"),
                 // PUBLISHER LOOKUP
-                Utilities.buildLookUp("publisher", "titleData.publisher", "_id", "publisherData"),
+                buildLookUp("publisher", "titleData.publisher", "_id", "publisherData"),
                 Aggregation.unwind("$publisherData"),
                 Aggregation.match(Criteria
                         .where("publisherData.key").is(publisherKey)
@@ -151,12 +129,12 @@ public class CustomIssueRepositoryImpl implements CustomIssueRepository {
                 ? new PageImpl<>(
                 result.getResultData(),
                 pageable,
-                result.getPageInfo().get(0).get("TotalRecords"))
+                result.getPageInfo().getFirst().get("TotalRecords"))
                 : Page.empty();
     }
 
     private MatchOperation buildVariantMatch(String publisherKey, String titleKey, String variant) {
-        if (variant.equalsIgnoreCase("true") | variant.equalsIgnoreCase("false")) {
+        if (variant.equalsIgnoreCase("true") || variant.equalsIgnoreCase("false")) {
             return Aggregation.match(Criteria
                     .where("publisherData.key").is(publisherKey)
                     .and("titleData.key").is(titleKey)
@@ -165,5 +143,19 @@ public class CustomIssueRepositoryImpl implements CustomIssueRepository {
         return Aggregation.match(Criteria
                 .where("publisherData.key").is(publisherKey)
                 .and("titleData.key").is(titleKey));
+    }
+
+    private MatchOperation buildVariantMatch(String publisherKey, String titleKey, String issueKey, String variant) {
+        if (variant.equalsIgnoreCase("true") || variant.equalsIgnoreCase("false")) {
+            return Aggregation.match(Criteria
+                    .where("publisherData.key").is(publisherKey)
+                    .and("titleData.key").is(titleKey)
+                    .and("key").is(issueKey)
+                    .and("variant").is(Boolean.valueOf(variant)));
+        }
+        return Aggregation.match(Criteria
+                .where("publisherData.key").is(publisherKey)
+                .and("titleData.key").is(titleKey)
+                .and("key").is(issueKey));
     }
 }

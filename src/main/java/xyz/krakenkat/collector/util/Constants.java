@@ -11,6 +11,7 @@ public final class Constants {
     public static final String PASSWORD_EXCEPTION_MESSAGE = "Password must have at least 8 characters in length, include at least one number and one special character";
     public static final String PUBLISHER_KEY_NOT_FOUND_EXCEPTION_MESSAGE = "Publisher key must be either present or be valid";
     public static final String TITLE_KEY_NOT_FOUND_EXCEPTION_MESSAGE = "Title key must be either present or be valid";
+    public static final String ISSUE_KEY_NOT_FOUND_EXCEPTION_MESSAGE = "Issue key must be either present or be valid";
     public static final String USER_NOT_FOUND_EXCEPTION_MESSAGE = "The username %s doesn't exist";
     public static final String DEFAULT_AVATAR = "default-avatar.png";
     public static final String DEFAULT_COVER = "default-cover.png";
@@ -21,6 +22,8 @@ public final class Constants {
     public static final String SIZE_DESCRIPTION = "Number of records per page";
     public static final String SORT_DESCRIPTION = "Sorting criteria in the format: property(,asc|desc). Default sort " +
             "order is ascending. Multiple sort criteria are supported.";
+
+    public static final String VARIANT_DESCRIPTION = "Filter to get all issues, regular issues or variant issues";
 
     private Constants() {}
 

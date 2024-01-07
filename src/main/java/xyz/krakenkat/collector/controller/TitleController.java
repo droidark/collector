@@ -21,6 +21,8 @@ import xyz.krakenkat.collector.dto.TitleDTO;
 import xyz.krakenkat.collector.exception.FieldNotValidException;
 import xyz.krakenkat.collector.util.Constants;
 
+import static xyz.krakenkat.collector.util.Constants.*;
+
 
 @Tag(name = "Title", description = "Title API to execute CRUD operations")
 @RequestMapping("/titles")
@@ -78,8 +80,8 @@ public interface TitleController {
     ResponseEntity<Page<IssueDTO>> retrieveIssuesByTitleKeyAndPublisherKey(
             @Parameter(description = "Title key, cannot be empty", required = true) @PathVariable String titleKey,
             @Parameter(description = "Publisher key", required = true) @RequestParam(name = "publisher") String publisherKey,
-            @Parameter(description = "Filter to get all issues, regular issues or variant issues") @RequestParam(name = "variant", defaultValue = "all") String variant,
-            @Parameter(description = Constants.PAGE_DESCRIPTION) @RequestParam(defaultValue = "0") int page,
-            @Parameter(description = Constants.SIZE_DESCRIPTION) @RequestParam(defaultValue = "10") int size,
-            @Parameter(description = Constants.SORT_DESCRIPTION) @RequestParam(defaultValue = "number,asc") String[] sort);
+            @Parameter(description = VARIANT_DESCRIPTION) @RequestParam(name = "variant", defaultValue = "all") String variant,
+            @Parameter(description = PAGE_DESCRIPTION) @RequestParam(defaultValue = "0") int page,
+            @Parameter(description = SIZE_DESCRIPTION) @RequestParam(defaultValue = "10") int size,
+            @Parameter(description = SORT_DESCRIPTION) @RequestParam(defaultValue = "number,asc") String[] sort);
 }

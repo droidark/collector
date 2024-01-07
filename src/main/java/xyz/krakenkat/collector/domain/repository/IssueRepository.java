@@ -15,11 +15,23 @@ import java.util.Optional;
 @Repository
 public interface IssueRepository extends MongoRepository<Issue, String>, CustomIssueRepository {
 
-    Page<Issue> findAll(Pageable pageable);
     Page<Issue> findAllByPublisherKeyAndTitleKey(String publisherKey, String titleKey, String variant, Pageable pageable);
-    Optional<Issue> findOneByPublisherKeyAndTitleKeyAndIssueKey(String publisherKey, String titleKey, String issueKey);
-    Page<Issue> findAllByVariantOfAndVariantIsTrue(ObjectId variantOf, Pageable pageable);
-    Page<Issue> findAllVariantsByPublisherKeyAndTitleKeyAndIssueKey(String publisherKey, String titleKey, String issueKey, Pageable pageable);
-    Page<Issue> findAllByUsernameAndPublisherKeyAndTitleKey(String username, String publisherKey, String titleKey, boolean variant, Pageable pageable);
+
+    Page<Issue> findAllByPublisherKeyAndTitleKeyAndIssueKey(
+            String publisherKey,
+            String titleKey,
+            String issueKey,
+            String variant,
+            Pageable pageable);
+
+    Page<Issue> findAllByUsernameAndPublisherKeyAndTitleKey(
+            String username,
+            String publisherKey,
+            String titleKey,
+            boolean variant,
+            Pageable pageable);
+
+    boolean existsByKey(String key);
+
     List<Ids> findIdsByKeys(String publisherKey, String titleKey, List<String> issueKeys);
 }
