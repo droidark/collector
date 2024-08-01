@@ -3,12 +3,10 @@ package xyz.krakenkat.collector.util;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import xyz.krakenkat.collector.domain.model.Issue;
 import xyz.krakenkat.collector.domain.model.Publisher;
-import xyz.krakenkat.collector.domain.model.Title;
-import xyz.krakenkat.collector.dto.IssueDTO;
+import xyz.krakenkat.collector.domain.model.PublisherSocialNetwork;
 import xyz.krakenkat.collector.dto.PublisherDTO;
-import xyz.krakenkat.collector.dto.TitleDTO;
+import xyz.krakenkat.collector.dto.SocialNetworkDTO;
 
 @Service
 @RequiredArgsConstructor
@@ -20,12 +18,15 @@ public class MapperService {
         return this.modelMapper.map(publisher, PublisherDTO.class);
     }
 
-    public TitleDTO toTitleDTO(Title title) {
-        return this.modelMapper.map(title, TitleDTO.class);
+    public SocialNetworkDTO toSocialNetworkDTO(PublisherSocialNetwork publisherSocialNetwork) {
+        return this.modelMapper.map(publisherSocialNetwork, SocialNetworkDTO.class);
     }
 
-    public IssueDTO toIssueDTO(Issue issue) {
-        return this.modelMapper.map(issue, IssueDTO.class);
+    public Publisher toPublisher(PublisherDTO publisherDTO) {
+        return this.modelMapper.map(publisherDTO, Publisher.class);
     }
 
+    public PublisherSocialNetwork toPublisherSocialNetwork(SocialNetworkDTO socialNetworkDTO) {
+        return this.modelMapper.map(socialNetworkDTO, PublisherSocialNetwork.class);
+    }
 }

@@ -1,18 +1,30 @@
 package xyz.krakenkat.collector.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+import xyz.krakenkat.collector.constant.SocialNetworkType;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@MappedSuperclass
+@SuperBuilder
 public class SocialNetwork {
-    private String key;
-    private String nickname;
+
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type")
+    private SocialNetworkType type;
+
+    @Column(name = "username")
+    private String username;
+
+    @Column(name = "url")
     private String url;
 }

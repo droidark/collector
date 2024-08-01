@@ -7,11 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.krakenkat.collector.controller.PublisherController;
 import xyz.krakenkat.collector.dto.PublisherDTO;
-import xyz.krakenkat.collector.dto.TitleDTO;
 import xyz.krakenkat.collector.exception.NoContentException;
 import xyz.krakenkat.collector.service.PublisherService;
-import xyz.krakenkat.collector.service.TitleService;
-import xyz.krakenkat.collector.util.Utilities;
+
+import static xyz.krakenkat.collector.util.Utilities.buildSortCriteria;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,20 +18,17 @@ public class PublisherControllerImpl implements PublisherController {
 
     private final PublisherService publisherService;
 
-    private final TitleService titleService;
-
     @Override
     public ResponseEntity<Page<PublisherDTO>> retrieveAllPublishers(int page, int size, String[] sort) {
-        return ResponseEntity.ok(publisherService.getAllPublishers(PageRequest.of(page, size, Utilities.buildSortCriteria(sort))));
+        Page<PublisherDTO> publisherDTOPage = publisherService.getPublishers(PageRequest.of(page, size, buildSortCriteria(sort)));
+        if (!publisherDTOPage.isEmpty()) {
+            return ResponseEntity.ok(publisherDTOPage);
+        }
+        return ResponseEntity.noContent().build();
     }
 
     @Override
     public ResponseEntity<PublisherDTO> retrievePublisherByKey(String key) throws NoContentException {
         return ResponseEntity.ok(publisherService.getPublisherByKey(key));
-    }
-
-    @Override
-    public ResponseEntity<Page<TitleDTO>> retrieveTitlesByKey(String key, int page, int size, String[] sort) {
-        return ResponseEntity.ok(titleService.getTitlesByKey(key, PageRequest.of(page, size, Utilities.buildSortCriteria(sort))));
     }
 }

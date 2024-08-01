@@ -1,28 +1,42 @@
 package xyz.krakenkat.collector.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.List;
 
-@Document
-@Data
+@Entity
+@Table(name = "publishers")
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 @Builder
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Publisher {
+
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "lookup_key")
     private String key;
+
+    @Column(name = "url")
     private String url;
+
+    @Column(name = "logo")
     private String logo;
+
+    @Column(name = "information")
     private String information;
-    private List<SocialNetwork> socialNetworks;
+
+    @JsonManagedReference
+    @JsonIgnoreProperties("publisher")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "publisher", cascade = CascadeType.ALL)
+    private List<PublisherSocialNetwork> publisherSocialNetworks;
 }
