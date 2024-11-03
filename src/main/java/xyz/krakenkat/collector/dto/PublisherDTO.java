@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.hateoas.server.core.Relation;
 
 import java.util.List;
 
@@ -11,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Relation(collectionRelation = "publishers")
 public class PublisherDTO {
 
     private String name;

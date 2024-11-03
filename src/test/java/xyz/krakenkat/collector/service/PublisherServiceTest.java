@@ -11,24 +11,30 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import xyz.krakenkat.collector.domain.model.Publisher;
 import xyz.krakenkat.collector.domain.repository.PublisherRepository;
+import xyz.krakenkat.collector.domain.repository.TitleRepository;
 import xyz.krakenkat.collector.dto.PublisherDTO;
 import xyz.krakenkat.collector.exception.NoContentException;
 import xyz.krakenkat.collector.service.impl.PublisherServiceImpl;
-import xyz.krakenkat.collector.util.MapperService;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
-import static xyz.krakenkat.collector.util.TestUtilities.*;
+import static xyz.krakenkat.collector.util.PublisherUtilities.buildPublisherDTOList;
+import static xyz.krakenkat.collector.util.PublisherUtilities.buildPublisherList;
+import static xyz.krakenkat.collector.util.TestUtilities.generateRandomKey;
 
 @ExtendWith(SpringExtension.class)
 class PublisherServiceTest {
 
     @Mock
     private PublisherRepository publisherRepository;
+
+    @Mock
+    private TitleRepository titleRepository;
 
     @Mock
     private MapperService mapperService;
@@ -40,12 +46,17 @@ class PublisherServiceTest {
     @DisplayName("Should return all publishers")
     void should_return_all_publishers() {
         // Given
-        int expected = 1;
+        int pageNumber = 0, pageSize = 10, expected = 5;
 
         // When
-        when(publisherRepository.findAll(any(PageRequest.class))).thenReturn(new PageImpl<>(buildPublishers()));
-        when(mapperService.toPublisherDTO(any(Publisher.class))).thenReturn(buildPublisherDTO());
-        Page<PublisherDTO> result = publisherService.getPublishers(PageRequest.of(0, 10));
+        when(publisherRepository.findAll(any(PageRequest.class))).thenReturn(new PageImpl<>(buildPublisherList()));
+        when(mapperService.toPublisherDTO(any(Publisher.class))).thenReturn(buildPublisherDTOList().getFirst());
+        when(mapperService.toPublisherDTO(any(Publisher.class))).thenReturn(buildPublisherDTOList().get(1));
+        when(mapperService.toPublisherDTO(any(Publisher.class))).thenReturn(buildPublisherDTOList().get(2));
+        when(mapperService.toPublisherDTO(any(Publisher.class))).thenReturn(buildPublisherDTOList().get(3));
+        when(mapperService.toPublisherDTO(any(Publisher.class))).thenReturn(buildPublisherDTOList().getLast());
+
+        Page<PublisherDTO> result = publisherService.getPublishers(PageRequest.of(pageNumber, pageSize));
 
         // Then
         assertEquals(expected, result.getTotalElements());
@@ -55,11 +66,11 @@ class PublisherServiceTest {
     @DisplayName("Should return publisher by key")
     void should_return_publisher_by_key() {
         // Given
-        String key = "mangaline-mx";
+        String key = "ecolife";
 
         // When
-        when(publisherRepository.findByKey(anyString())).thenReturn(Optional.of(buildPublisher()));
-        when(mapperService.toPublisherDTO(any(Publisher.class))).thenReturn(buildPublisherDTO());
+        when(publisherRepository.findByKey(anyString())).thenReturn(Optional.of(buildPublisherList().getLast()));
+        when(mapperService.toPublisherDTO(any(Publisher.class))).thenReturn(buildPublisherDTOList().getLast());
         PublisherDTO result = publisherService.getPublisherByKey(key);
 
         // Then
@@ -70,11 +81,11 @@ class PublisherServiceTest {
     @DisplayName("should_return_publisher_by_key_throws_NoContentException")
     void should_return_publisher_by_key_throws_NoContentException() {
         // Given
-        String key = "mangaline-mx";
+        String key = generateRandomKey(5);
 
         // When
         when(publisherRepository.findByKey(anyString())).thenReturn(Optional.empty());
-        when(mapperService.toPublisherDTO(any(Publisher.class))).thenReturn(buildPublisherDTO());
+        when(mapperService.toPublisherDTO(any(Publisher.class))).thenThrow(NoContentException.class);
 
         // Then
         assertThrows(NoContentException.class, () -> publisherService.getPublisherByKey(key));

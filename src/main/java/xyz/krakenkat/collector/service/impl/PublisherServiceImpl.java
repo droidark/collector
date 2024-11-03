@@ -7,10 +7,9 @@ import org.springframework.stereotype.Service;
 import xyz.krakenkat.collector.domain.repository.PublisherRepository;
 import xyz.krakenkat.collector.dto.PublisherDTO;
 import xyz.krakenkat.collector.exception.NoContentException;
+import xyz.krakenkat.collector.service.MapperService;
 import xyz.krakenkat.collector.service.PublisherService;
-import xyz.krakenkat.collector.util.MapperService;
 
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +21,9 @@ public class PublisherServiceImpl implements PublisherService {
 
     @Override
     public Page<PublisherDTO> getPublishers(Pageable pageable) {
-        return publisherRepository.findAll(pageable).map(mapper::toPublisherDTO);
+        return publisherRepository
+                .findAll(pageable)
+                .map(mapper::toPublisherDTO);
     }
 
     @Override

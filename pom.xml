@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.5</version>
+        <version>3.3.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>xyz.krakenkat</groupId>
@@ -15,9 +15,9 @@
     <description>collector</description>
     <properties>
         <java.version>22</java.version>
-        <modelmapper.version>3.2.0</modelmapper.version>
+        <modelmapper.version>3.2.1</modelmapper.version>
         <jacoco.version>0.8.12</jacoco.version>
-        <springdoc-openapi.version>2.5.0</springdoc-openapi.version>
+        <springdoc-openapi.version>2.6.0</springdoc-openapi.version>
     </properties>
     <dependencies>
 
@@ -29,6 +29,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-hateoas</artifactId>
         </dependency>
 
         <dependency>
@@ -55,17 +60,17 @@
             <version>${springdoc-openapi.version}</version>
         </dependency>
 
-    <dependency>
-        <groupId>com.h2database</groupId>
-        <artifactId>h2</artifactId>
-        <scope>test</scope>
-    </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
 
-    <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-test</artifactId>
-        <scope>test</scope>
-    </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -117,5 +122,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

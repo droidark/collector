@@ -1,68 +1,171 @@
 -- DROP TABLES
-drop table publishers IF exists;
-drop table publisher_social_networks IF exists;
+DROP TABLE IF EXISTS publisher_social_networks;
+DROP TABLE IF EXISTS publishers;
+
+-- CREATE SEQUENCES
+CREATE SEQUENCE publishers_seq START WITH 1 INCREMENT BY 50;
+CREATE SEQUENCE publisher_social_networks_seq START WITH 1 INCREMENT BY 50;
+CREATE SEQUENCE titles_seq START WITH 1 INCREMENT BY 50;
 
 -- CREATE TABLES
-create sequence publishers_seq start with 1 increment by 50;
-create table publishers (
-    id int default next value for publishers_seq primary key not null,
-    name varchar(100),
-    lookup_key varchar(100),
-    information varchar(500),
-    logo varchar(100),
-    url varchar(100)
+CREATE TABLE publishers (
+    id INT DEFAULT NEXTVAL('publishers_seq') PRIMARY KEY NOT NULL,
+    name VARCHAR(100),
+    lookup_key VARCHAR(100),
+    information VARCHAR(500),
+    logo VARCHAR(100),
+    url VARCHAR(100)
 );
 
-create sequence publisher_social_networks start with 1 increment by 50;
-create table publisher_social_networks (
-    id int default next value for publisher_social_networks primary key not null,
-    id_publisher int not null,
-    type varchar(100) not null,
-    username varchar(100) not null,
-    url varchar(100) not null
+CREATE TABLE publisher_social_networks (
+    id INT DEFAULT NEXTVAL('publisher_social_networks_seq') PRIMARY KEY NOT NULL,
+    id_publisher INT NOT NULL,
+    type VARCHAR(100) NOT NULL,
+    username VARCHAR(100) NOT NULL,
+    url VARCHAR(100) NOT NULL
 );
 
--- CREATE FOREIGN KEYS
-alter table publisher_social_networks
-    add constraint publisher_social_networks_publisher_id_fk
-        foreign key (id_publisher)
-            references publishers(id)
-            on delete cascade;
+CREATE TABLE titles (
+    id INT DEFAULT NEXTVAL('titles_seq') PRIMARY KEY NOT NULL,
+    id_publisher INT NOT NULL,
+    name VARCHAR(255),
+    lookup_key VARCHAR(100),
+    cover VARCHAR(100),
+    demography VARCHAR(100),
+    format VARCHAR(100),
+    frequency VARCHAR(100),
+    release_date TIMESTAMP,
+    status VARCHAR(50),
+    type VARCHAR(100),
+    total_issues INT
+);
+
+-- CREATE FOREIGN KEY
+ALTER TABLE publisher_social_networks
+    ADD CONSTRAINT publisher_social_networks_publisher_id_fk
+        FOREIGN KEY (id_publisher)
+            REFERENCES publishers(id)
+            ON DELETE CASCADE;
+
+ALTER TABLE titles
+    ADD CONSTRAINT titles_publisher_id_fk
+        FOREIGN KEY (id_publisher)
+            REFERENCES titles(id)
+            ON DELETE CASCADE;
 
 -- FILL TABLES
-insert into publishers(name, lookup_key, url, logo, information) values ('Panini México', 'panini-mx', 'https://kodansha.us/', 'default.png', 'Subsidiaria mexicana de Panini');
-insert into publisher_social_networks (id_publisher, type, username, url) values ((select max(id) from publishers), 'X', 'PaniniMangaMx', 'https://twitter.com/PaniniMangaMx');
-insert into publisher_social_networks (id_publisher, type, username, url) values ((select max(id) from publishers), 'FACEBOOK', 'PaniniMangaMx', 'https://www.facebook.com/PaniniMangaMx');
-insert into publisher_social_networks (id_publisher, type, username, url) values ((select max(id) from publishers), 'INSTAGRAM', 'paninimangamx', 'https://www.instagram.com/paninimangamx/');
-insert into publisher_social_networks (id_publisher, type, username, url) values ((select max(id) from publishers), 'TIKTOK', 'paninimangamx', 'https://www.tiktok.com/@paninimangamx');
-insert into publisher_social_networks (id_publisher, type, username, url) values ((select max(id) from publishers), 'X', 'PaniniComicsMx', 'https://twitter.com/PaniniComicsMx');
-insert into publisher_social_networks (id_publisher, type, username, url) values ((select max(id) from publishers), 'FACEBOOK', 'PaniniComicsMx', 'https://www.facebook.com/PaniniComicsMx');
-insert into publisher_social_networks (id_publisher, type, username, url) values ((select max(id) from publishers), 'INSTAGRAM', 'paninicomicsmx', 'https://www.instagram.com/paninicomicsmx/');
-insert into publisher_social_networks (id_publisher, type, username, url) values ((select max(id) from publishers), 'TIKTOK', 'paninicomicsmx', 'https://www.tiktok.com/@paninicomicsmx');
+/*
+*   TECHWORLD
+*/
+INSERT INTO publishers (name, lookup_key, information, logo, url) VALUES ('TechWorld', 'techworld', 'Leading tech news publisher', 'https://techworld.com/logo.png', 'https://techworld.com');
+-- Social networks for TechWorld
+INSERT INTO publisher_social_networks (id_publisher, type, username, url) VALUES ((select max(id) from publishers), 'FACEBOOK', 'techworldFB', 'https://facebook.com/techworld');
+INSERT INTO publisher_social_networks (id_publisher, type, username, url) VALUES ((select max(id) from publishers), 'INSTAGRAM', 'techworldIG', 'https://instagram.com/techworld');
+-- Titles for TechWorld
+INSERT INTO titles (id_publisher, name, lookup_key, cover, demography, format, frequency, release_date, status, type, total_issues) VALUES
+    ((select max(id) from publishers), 'Future Tech Monthly', 'future_tech_monthly', 'https://techworld.com/covers/future_tech_monthly.png', 'Technology Enthusiasts', 'Digital', 'Monthly', '2024-01-01 00:00:00', 'Active', 'Magazine', 50);
 
-insert into publishers(name, lookup_key, url, logo, information) values ('Kamite', 'kamite', 'https://kamite.com.mx', 'default.png', 'Somos una empresa 100% mexicana integrada por profesionales con una experiencia de más de 20 años en el medio editorial y especialistas en el ramo de los cómics, mangas e historietas.');
-insert into publisher_social_networks (id_publisher, type, username, url) values ((select max(id) from publishers), 'X', 'kamite_manga', 'https://twitter.com/kamite_manga');
-insert into publisher_social_networks (id_publisher, type, username, url) values ((select max(id) from publishers), 'FACEBOOK', 'kamitemanga', 'https://www.facebook.com/kamitemanga');
-insert into publisher_social_networks (id_publisher, type, username, url) values ((select max(id) from publishers), 'INSTAGRAM', 'kamite_manga', 'https://www.instagram.com/kamite_manga/');
-insert into publisher_social_networks (id_publisher, type, username, url) values ((select max(id) from publishers), 'TIKTOK', 'editorialkamiteoficial', 'https://www.tiktok.com/@editorialkamiteoficial');
-insert into publisher_social_networks (id_publisher, type, username, url) values ((select max(id) from publishers), 'X', 'Kamite5', 'https://twitter.com/Kamite5');
-insert into publisher_social_networks (id_publisher, type, username, url) values ((select max(id) from publishers), 'FACEBOOK', 'EditorialKamite', 'https://www.facebook.com/EditorialKamite');
-insert into publisher_social_networks (id_publisher, type, username, url) values ((select max(id) from publishers), 'INSTAGRAM', 'editorial_kamite', 'https://www.instagram.com/editorial_kamite/');
+INSERT INTO titles (id_publisher, name, lookup_key, cover, demography, format, frequency, release_date, status, type, total_issues) VALUES
+    ((select max(id) from publishers), 'Gadget Weekly', 'gadget_weekly', 'https://techworld.com/covers/gadget_weekly.png', 'Tech Gadget Fans', 'Digital', 'Weekly', '2023-01-01 00:00:00', 'Active', 'Magazine', 200);
 
-insert into publishers(name, lookup_key, url, logo, information) values ('Distrito Manga MX', 'distrito-manga-mx', 'https://www.penguinlibros.com/mx/211002-distrito-manga', 'default.png', 'Somos el sello especializado en manga de Penguin Libros México.');
-insert into publisher_social_networks (id_publisher, type, username, url) values ((select max(id) from publishers), 'X', 'DistritoMangaMx', 'https://twitter.com/DistritoMangaMx');
-insert into publisher_social_networks (id_publisher, type, username, url) values ((select max(id) from publishers), 'FACEBOOK', 'DistritoMangaMx', 'https://www.facebook.com/DistritoMangaMx');
-insert into publisher_social_networks (id_publisher, type, username, url) values ((select max(id) from publishers), 'INSTAGRAM', 'distritomangamx', 'https://www.instagram.com/distritomangamx/');
-insert into publisher_social_networks (id_publisher, type, username, url) values ((select max(id) from publishers), 'TIKTOK', 'distritomangamx', 'https://www.tiktok.com/@distritomangamx');
+INSERT INTO titles (id_publisher, name, lookup_key, cover, demography, format, frequency, release_date, status, type, total_issues) VALUES
+    ((select max(id) from publishers), 'AI Innovations', 'ai_innovations', 'https://techworld.com/covers/ai_innovations.png', 'AI Researchers', 'Digital', 'Quarterly', '2022-06-01 00:00:00', 'Active', 'Journal', 10);
 
-insert into publishers(name, lookup_key, url, logo, information) values ('Viz', 'viz', 'https://www.viz.com', 'default.png', 'VIZ Media is leading the way in what’s now, new and next. Reaching one in four millennials and half of all GenZ manga readers, VIZ is at the forefront of America’s Japanese pop-culture phenomenon, which today dominates multiple industries from publishing and animation to film and gaming.');
-insert into publisher_social_networks (id_publisher, type, username, url) values ((select max(id) from publishers), 'X', 'VIZMedia', 'https://twitter.com/VIZMedia');
-insert into publisher_social_networks (id_publisher, type, username, url) values ((select max(id) from publishers), 'FACEBOOK', 'OfficialVIZMedia', 'https://www.facebook.com/OfficialVIZMedia');
-insert into publisher_social_networks (id_publisher, type, username, url) values ((select max(id) from publishers), 'INSTAGRAM', 'vizmedia', 'https://www.instagram.com/vizmedia/');
-insert into publisher_social_networks (id_publisher, type, username, url) values ((select max(id) from publishers), 'TIKTOK', 'vizmedia', 'https://www.tiktok.com/@vizmedia');
+INSERT INTO titles (id_publisher, name, lookup_key, cover, demography, format, frequency, release_date, status, type, total_issues) VALUES
+    ((select max(id) from publishers), 'Future Trends', 'future_trends', 'https://techworld.com/covers/future_trends.png', 'Trend Enthusiasts', 'Print & Digital', 'Monthly', '2020-01-01 00:00:00', 'Active', 'Magazine', 48);
 
-insert into publishers(name, lookup_key, url, logo, information) values ('Kodansha', 'kodansha', 'https://kodansha.us/', 'default.png', 'For over a century, Kodansha has relentlessly pursued quality and creativity, which allows us to continuously reimagine what could be. We see the world without restrictions. A place of diverse passions, profound perspectives and limitless potential. Filled with curious minds and unexpected voices. And as we continue to shine a light on them, there is no telling how much further we can go.');
-insert into publisher_social_networks (id_publisher, type, username, url) values ((select max(id) from publishers), 'X', 'KODANSHA_EN', 'https://twitter.com/KODANSHA_EN');
-insert into publisher_social_networks (id_publisher, type, username, url) values ((select max(id) from publishers), 'FACEBOOK', 'KodanshaManga', 'https://www.facebook.com/KodanshaManga');
-insert into publisher_social_networks (id_publisher, type, username, url) values ((select max(id) from publishers), 'INSTAGRAM', 'kodanshamanga', 'https://www.instagram.com/kodanshamanga/');
-insert into publisher_social_networks (id_publisher, type, username, url) values ((select max(id) from publishers), 'TIKTOK', 'kodanshaus', 'https://www.tiktok.com/@kodanshaus');
+INSERT INTO titles (id_publisher, name, lookup_key, cover, demography, format, frequency, release_date, status, type, total_issues) VALUES
+    ((select max(id) from publishers), 'TechWorld Daily', 'techworld_daily', 'https://techworld.com/covers/techworld_daily.png', 'General Audience', 'Digital', 'Daily', '2021-01-01 00:00:00', 'Active', 'Newsletter', 1000);
+
+/*
+*   FOODIESDAILY
+*/
+INSERT INTO publishers (name, lookup_key, information, logo, url) VALUES ('FoodiesDaily', 'foodiesdaily', 'Daily food and recipe tips', 'https://foodiesdaily.com/logo.png', 'https://foodiesdaily.com');
+-- Social networks for FoodiesDaily
+INSERT INTO publisher_social_networks (id_publisher, type, username, url) VALUES ((select max(id) from publishers), 'INSTAGRAM', 'foodiesdailyIG', 'https://instagram.com/foodiesdaily');
+INSERT INTO publisher_social_networks (id_publisher, type, username, url) VALUES ((select max(id) from publishers), 'X', 'foodiesdailyX', 'https://x.com/foodiesdaily');
+-- Titles for FoodiesDaily
+INSERT INTO titles (id_publisher, name, lookup_key, cover, demography, format, frequency, release_date, status, type, total_issues) VALUES
+    ((select max(id) from publishers), 'Recipe Roundup', 'recipe_roundup', 'https://foodiesdaily.com/covers/recipe_roundup.png', 'Home Cooks', 'Digital', 'Monthly', '2024-01-01 00:00:00', 'Active', 'Magazine', 20);
+
+INSERT INTO titles (id_publisher, name, lookup_key, cover, demography, format, frequency, release_date, status, type, total_issues) VALUES
+    ((select max(id) from publishers), 'Food Trends Quarterly', 'food_trends_quarterly', 'https://foodiesdaily.com/covers/food_trends_quarterly.png', 'Food Enthusiasts', 'Digital & Print', 'Quarterly', '2023-03-01 00:00:00', 'Active', 'Journal', 10);
+
+INSERT INTO titles (id_publisher, name, lookup_key, cover, demography, format, frequency, release_date, status, type, total_issues) VALUES
+    ((select max(id) from publishers), 'Baking Basics', 'baking_basics', 'https://foodiesdaily.com/covers/baking_basics.png', 'Bakers', 'Print', 'Monthly', '2021-01-01 00:00:00', 'Active', 'Guide', 36);
+
+INSERT INTO titles (id_publisher, name, lookup_key, cover, demography, format, frequency, release_date, status, type, total_issues) VALUES
+    ((select max(id) from publishers), 'Culinary Cultures', 'culinary_cultures', 'https://foodiesdaily.com/covers/culinary_cultures.png', 'Food Travelers', 'Digital', 'Monthly', '2022-04-01 00:00:00', 'Active', 'Magazine', 24);
+
+INSERT INTO titles (id_publisher, name, lookup_key, cover, demography, format, frequency, release_date, status, type, total_issues) VALUES
+    ((select max(id) from publishers), 'Chef''s Special', 'chefs_special', 'https://foodiesdaily.com/covers/chefs_special.png', 'Professional Chefs', 'Print & Digital', 'Monthly', '2020-06-01 00:00:00', 'Active', 'Magazine', 50);
+
+
+/*
+*   TRAVELISTA
+*/
+INSERT INTO publishers (name, lookup_key, information, logo, url) VALUES ('Travelista', 'travelista', 'Inspiring travel stories and guides', 'https://travelista.com/logo.png', 'https://travelista.com');
+-- Social networks for Travelista
+INSERT INTO publisher_social_networks (id_publisher, type, username, url) VALUES ((select max(id) from publishers), 'INSTAGRAM', 'travelistaIG', 'https://instagram.com/travelista');
+INSERT INTO publisher_social_networks (id_publisher, type, username, url) VALUES ((select max(id) from publishers), 'FACEBOOK', 'travelistaFB', 'https://facebook.com/travelista');
+-- Titles for Travelista
+INSERT INTO titles (id_publisher, name, lookup_key, cover, demography, format, frequency, release_date, status, type, total_issues) VALUES
+    ((select max(id) from publishers), 'Wanderlust Weekly', 'wanderlust_weekly', 'https://travelista.com/covers/wanderlust_weekly.png', 'Travel Enthusiasts', 'Digital', 'Weekly', '2023-01-01 00:00:00', 'Active', 'Magazine', 150);
+
+INSERT INTO titles (id_publisher, name, lookup_key, cover, demography, format, frequency, release_date, status, type, total_issues) VALUES
+    ((select max(id) from publishers), 'Cultural Escapes', 'cultural_escapes', 'https://travelista.com/covers/cultural_escapes.png', 'Culture Seekers', 'Print & Digital', 'Monthly', '2022-04-01 00:00:00', 'Active', 'Magazine', 24);
+
+INSERT INTO titles (id_publisher, name, lookup_key, cover, demography, format, frequency, release_date, status, type, total_issues) VALUES
+    ((select max(id) from publishers), 'Off the Beaten Path', 'off_the_beaten_path', 'https://travelista.com/covers/off_the_beaten_path.png', 'Adventure Travelers', 'Digital', 'Quarterly', '2021-01-01 00:00:00', 'Active', 'Journal', 12);
+
+INSERT INTO titles (id_publisher, name, lookup_key, cover, demography, format, frequency, release_date, status, type, total_issues) VALUES
+    ((select max(id) from publishers), 'Global Guide', 'global_guide', 'https://travelista.com/covers/global_guide.png', 'Global Travelers', 'Digital', 'Monthly', '2020-06-01 00:00:00', 'Active', 'Guide', 48);
+
+INSERT INTO titles (id_publisher, name, lookup_key, cover, demography, format, frequency, release_date, status, type, total_issues) VALUES
+    ((select max(id) from publishers), 'Traveler''s Digest', 'travelers_digest', 'https://travelista.com/covers/travelers_digest.png', 'General Audience', 'Print', 'Monthly', '2019-11-01 00:00:00', 'Active', 'Magazine', 60);
+
+/*
+*   SPORTSARENA
+*/
+INSERT INTO publishers (name, lookup_key, information, logo, url) VALUES ('SportsArena', 'sportsarena', 'Latest sports news and updates', 'https://sportsarena.com/logo.png', 'https://sportsarena.com');
+-- Social networks for SportsArena
+INSERT INTO publisher_social_networks (id_publisher, type, username, url) VALUES ((select max(id) from publishers), 'X', 'sportsarenaX', 'https://x.com/sportsarena');
+INSERT INTO publisher_social_networks (id_publisher, type, username, url) VALUES ((select max(id) from publishers), 'TIKTOK', 'sportsarenaTT', 'https://tiktok.com/@sportsarena');
+-- Titles for SportsArena
+INSERT INTO titles (id_publisher, name, lookup_key, cover, demography, format, frequency, release_date, status, type, total_issues) VALUES
+    ((select max(id) from publishers), 'Arena Weekly', 'arena_weekly', 'https://sportsarena.com/covers/arena_weekly.png', 'Sports Fans', 'Digital', 'Weekly', '2023-03-01 00:00:00', 'Active', 'Magazine', 80);
+
+INSERT INTO titles (id_publisher, name, lookup_key, cover, demography, format, frequency, release_date, status, type, total_issues) VALUES
+    ((select max(id) from publishers), 'Pro Sports Quarterly', 'pro_sports_quarterly', 'https://sportsarena.com/covers/pro_sports_quarterly.png', 'Athletes', 'Digital & Print', 'Quarterly', '2022-01-01 00:00:00', 'Active', 'Journal', 10);
+
+INSERT INTO titles (id_publisher, name, lookup_key, cover, demography, format, frequency, release_date, status, type, total_issues) VALUES
+    ((select max(id) from publishers), 'Game Day Digest', 'game_day_digest', 'https://sportsarena.com/covers/game_day_digest.png', 'General Audience', 'Print', 'Monthly', '2021-04-01 00:00:00', 'Active', 'Magazine', 24);
+
+INSERT INTO titles (id_publisher, name, lookup_key, cover, demography, format, frequency, release_date, status, type, total_issues) VALUES
+    ((select max(id) from publishers), 'Scoreboard', 'scoreboard', 'https://sportsarena.com/covers/scoreboard.png', 'Sports Analysts', 'Digital', 'Weekly', '2020-08-01 00:00:00', 'Active', 'Newsletter', 100);
+
+INSERT INTO titles (id_publisher, name, lookup_key, cover, demography, format, frequency, release_date, status, type, total_issues) VALUES
+    ((select max(id) from publishers), 'Sports Highlights', 'sports_highlights', 'https://sportsarena.com/covers/sports_highlights.png', 'Sports Enthusiasts', 'Digital', 'Daily', '2021-01-01 00:00:00', 'Active', 'Newsletter', 365);
+
+/*
+*   ECOLIFE
+*/
+INSERT INTO publishers (name, lookup_key, information, logo, url) VALUES ('EcoLife', 'ecolife', 'Sustainable living tips and news', 'https://ecolife.com/logo.png', 'https://ecolife.com');
+-- Social networks for EcoLife
+INSERT INTO publisher_social_networks (id_publisher, type, username, url) VALUES ((select max(id) from publishers), 'FACEBOOK', 'ecolifeFB', 'https://facebook.com/ecolife');
+INSERT INTO publisher_social_networks (id_publisher, type, username, url) VALUES ((select max(id) from publishers), 'INSTAGRAM', 'ecolifeIG', 'https://instagram.com/ecolife');
+-- Titles for EcoLife
+INSERT INTO titles (id_publisher, name, lookup_key, cover, demography, format, frequency, release_date, status, type, total_issues) VALUES
+    ((select max(id) from publishers), 'Eco Daily', 'eco_daily', 'https://ecolife.com/covers/eco_daily.png', 'Eco-Friendly Audience', 'Digital', 'Daily', '2022-01-01 00:00:00', 'Active', 'Newsletter', 700);
+
+INSERT INTO titles (id_publisher, name, lookup_key, cover, demography, format, frequency, release_date, status, type, total_issues) VALUES
+    ((select max(id) from publishers), 'Green Living Monthly', 'green_living_monthly', 'https://ecolife.com/covers/green_living_monthly.png', 'Environmentalists', 'Print & Digital', 'Monthly', '2023-05-01 00:00:00', 'Active', 'Magazine', 20);
+
+INSERT INTO titles (id_publisher, name, lookup_key, cover, demography, format, frequency, release_date, status, type, total_issues) VALUES
+    ((select max(id) from publishers), 'Eco Guide', 'eco_guide', 'https://ecolife.com/covers/eco_guide.png', 'Sustainability Enthusiasts', 'Digital', 'Quarterly', '2021-01-01 00:00:00', 'Active', 'Guide', 12);
+
+INSERT INTO titles (id_publisher, name, lookup_key, cover, demography, format, frequency, release_date, status, type, total_issues) VALUES
+    ((select max(id) from publishers), 'Green Innovations', 'green_innovations', 'https://ecolife.com/covers/green_innovations.png', 'Innovators', 'Digital & Print', 'Quarterly', '2022-03-01 00:00:00', 'Active', 'Journal', 8);
+
+INSERT INTO titles (id_publisher, name, lookup_key, cover, demography, format, frequency, release_date, status, type, total_issues) VALUES
+    ((select max(id) from publishers), 'Sustainable Future', 'sustainable_future', 'https://ecolife.com/covers/sustainable_future.png', 'General Audience', 'Print', 'Monthly', '2020-02-01 00:00:00', 'Active', 'Magazine', 40);

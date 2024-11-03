@@ -11,7 +11,7 @@ import xyz.krakenkat.collector.domain.model.Publisher;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static xyz.krakenkat.collector.util.TestUtilities.buildPublisher;
+import static xyz.krakenkat.collector.util.PublisherUtilities.buildPublisher;
 
 @DataJpaTest
 class PublisherRepositoryTest {
@@ -34,8 +34,8 @@ class PublisherRepositoryTest {
     }
 
     @Test
-    @DisplayName("Should add publisher")
-    void should_add_publisher() {
+    @DisplayName("Should add a publisher")
+    void should_add_a_publisher() {
         // Given
         Publisher publisher = buildPublisher();
 
@@ -64,7 +64,7 @@ class PublisherRepositoryTest {
     @DisplayName("Should return publisher by key")
     void should_return_publisher_by_key() {
         // Given
-        String key = "viz";
+        String key = "ecolife";
 
         // When
         Optional<Publisher> publisher = repository.findByKey(key);

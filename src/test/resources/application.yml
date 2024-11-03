@@ -2,7 +2,7 @@ spring:
   application:
     name: collector
   datasource:
-    url: jdbc:h2:mem:testdb;NON_KEYWORDS=USER
+    url: jdbc:h2:mem:testdb;NON_KEYWORDS=USER;MODE=MySQL
   h2:
     console:
       enabled: true
