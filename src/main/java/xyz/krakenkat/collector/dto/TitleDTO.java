@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.hateoas.server.core.Relation;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -24,4 +25,5 @@ public class TitleDTO {
     private String status;
     private String type;
     private Integer totalIssues;
+    private List<String> genres;
 }

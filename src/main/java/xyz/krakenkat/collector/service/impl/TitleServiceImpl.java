@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import xyz.krakenkat.collector.constant.Constants;
+import xyz.krakenkat.collector.domain.model.Title;
 import xyz.krakenkat.collector.domain.repository.PublisherRepository;
 import xyz.krakenkat.collector.domain.repository.TitleRepository;
 import xyz.krakenkat.collector.dto.TitleDTO;
@@ -25,12 +26,6 @@ public class TitleServiceImpl implements TitleService {
 
     private final MapperService mapper;
 
-
-    @Override
-    public TitleDTO getTitleById(Long id) throws NoContentException {
-        return titleRepository.findById(id).map(mapper::toTitleDTO).orElseThrow(NoContentException::new);
-    }
-
     @Override
     public Page<TitleDTO> getAllTitlesByPublisherKey(String publisherKey, Pageable pageable) {
 
@@ -42,15 +37,18 @@ public class TitleServiceImpl implements TitleService {
     }
 
     @Override
-    public Optional<TitleDTO> getTitleByTitleKeyAndPublisherKey(String titleKey, String publisherKey) throws FieldNotValidException {
-        if (Boolean.FALSE.equals(publisherRepository.existsByKey(publisherKey))) {
-            throw new FieldNotValidException(Constants.PUBLISHER_KEY_NOT_FOUND_EXCEPTION_MESSAGE, publisherKey, "publisherKey");
-        }
-
-        if (Boolean.FALSE.equals(titleRepository.existsByKey(titleKey))) {
-            throw new FieldNotValidException(Constants.TITLE_KEY_NOT_FOUND_EXCEPTION_MESSAGE, titleKey, "titleKey");
-        }
-
-        return titleRepository.findByKeyAndPublisherKey(titleKey, publisherKey).map(mapper::toTitleDTO);
+    public TitleDTO getTitleByKeyAndPublisherKey(String key, String publisherKey) throws FieldNotValidException, NoContentException {
+        // Check if both title and publisher exist with a single query
+        return titleRepository.findByKeyAndPublisherKey(key, publisherKey)
+                .map(mapper::toTitleDTO)
+                .orElseThrow(() -> {
+                    if (!publisherRepository.existsByKey(publisherKey)) {
+                        return new FieldNotValidException(Constants.PUBLISHER_KEY_NOT_FOUND_EXCEPTION_MESSAGE, publisherKey, "publisher");
+                    } else if (!titleRepository.existsByKey(key)) {
+                        return new FieldNotValidException(Constants.TITLE_KEY_NOT_FOUND_EXCEPTION_MESSAGE, key, "key");
+                    } else {
+                        return new NoContentException();
+                    }
+                });
     }
 }

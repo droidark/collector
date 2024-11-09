@@ -2,8 +2,11 @@ package xyz.krakenkat.collector.domain.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "titles")
@@ -51,4 +54,7 @@ public class Title {
     @ManyToOne
     @JoinColumn(name = "id_publisher")
     private Publisher publisher;
+
+    @ManyToMany(mappedBy = "titles")
+    private Set<Genre> genres;
 }

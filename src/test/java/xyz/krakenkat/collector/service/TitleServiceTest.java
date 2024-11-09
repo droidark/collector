@@ -16,11 +16,10 @@ import xyz.krakenkat.collector.dto.TitleDTO;
 import xyz.krakenkat.collector.exception.FieldNotValidException;
 import xyz.krakenkat.collector.service.impl.TitleServiceImpl;
 
-import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static xyz.krakenkat.collector.util.TestUtilities.generateRandomKey;
 import static xyz.krakenkat.collector.util.TitleUtilities.buildTitleDTOList;
@@ -40,23 +39,6 @@ class TitleServiceTest {
 
     @InjectMocks
     private TitleServiceImpl titleService;
-
-    @Test
-    @DisplayName("Should return a title by id")
-    void should_return_a_title_by_id() {
-        // Given
-        Long id = 1L;
-        String expected = "future-tech-monthly";
-
-        // When
-        when(titleRepository.findById(anyLong())).thenReturn(Optional.of(buildTitleList().getFirst()));
-        when(mapperService.toTitleDTO(any(Title.class))).thenReturn(buildTitleDTOList().getFirst());
-
-        TitleDTO title = titleService.getTitleById(id);
-
-        // Then
-        assertEquals(expected, title.getKey());
-    }
 
     @Test
     @DisplayName("Should return titles by publisher key when publisher key exists")
