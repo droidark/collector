@@ -1,6 +1,5 @@
 package xyz.krakenkat.collector.service;
 
-import xyz.krakenkat.collector.domain.model.Genre;
 import xyz.krakenkat.collector.domain.model.Publisher;
 import xyz.krakenkat.collector.domain.model.PublisherSocialNetwork;
 import xyz.krakenkat.collector.domain.model.Title;

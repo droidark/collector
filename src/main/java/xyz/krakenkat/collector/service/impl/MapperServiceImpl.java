@@ -4,19 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import xyz.krakenkat.collector.domain.model.Genre;
-import xyz.krakenkat.collector.domain.model.Publisher;
-import xyz.krakenkat.collector.domain.model.PublisherSocialNetwork;
-import xyz.krakenkat.collector.domain.model.Title;
+import xyz.krakenkat.collector.domain.model.*;
 import xyz.krakenkat.collector.dto.PublisherDTO;
 import xyz.krakenkat.collector.dto.SocialNetworkDTO;
 import xyz.krakenkat.collector.dto.TitleDTO;
 import xyz.krakenkat.collector.service.MapperService;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -46,15 +41,29 @@ public class MapperServiceImpl implements MapperService {
 
     @Override
     public TitleDTO toTitleDTO(Title title) {
-        Converter<Set<Genre>, List<String>> genreConverter = context -> Optional.ofNullable(context.getSource())
+        Converter<Set<Genre>, List<String>> genreConverter = context -> Optional
+                .ofNullable(context.getSource())
                 .orElse(Collections.emptySet())
                 .stream()
                 .map(Genre::getGenreName)
+                .sorted()
                 .toList();
+
+        Converter<Set<TitleAuthorRole>, Map<String, String>> authorRoleConverter = context ->
+                context.getSource() == null ? Collections.emptyMap() :
+                        context.getSource().stream()
+                                .collect(Collectors.toMap(
+                                        role -> role.getRole().getRoleName(),
+                                        role -> role.getAuthor().getName(),
+                                        (existing, _) -> existing // Handles duplicate keys by keeping the first entry
+                                ));
 
         this.modelMapper
                 .typeMap(Title.class, TitleDTO.class)
-                .addMappings(mapper -> mapper.using(genreConverter).map(Title::getGenres, TitleDTO::setGenres));
+                .addMappings(mapper -> {
+                    mapper.using(genreConverter).map(Title::getGenres, TitleDTO::setGenres);
+                    mapper.using(authorRoleConverter).map(Title::getTitleAuthorRoles, TitleDTO::setAuthors);
+                });
 
         return this.modelMapper.map(title, TitleDTO.class);
     }

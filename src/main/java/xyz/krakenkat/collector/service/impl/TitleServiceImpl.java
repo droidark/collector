@@ -5,7 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import xyz.krakenkat.collector.constant.Constants;
-import xyz.krakenkat.collector.domain.model.Title;
 import xyz.krakenkat.collector.domain.repository.PublisherRepository;
 import xyz.krakenkat.collector.domain.repository.TitleRepository;
 import xyz.krakenkat.collector.dto.TitleDTO;
@@ -13,8 +12,6 @@ import xyz.krakenkat.collector.exception.FieldNotValidException;
 import xyz.krakenkat.collector.exception.NoContentException;
 import xyz.krakenkat.collector.service.MapperService;
 import xyz.krakenkat.collector.service.TitleService;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

@@ -57,4 +57,7 @@ public class Title {
 
     @ManyToMany(mappedBy = "titles")
     private Set<Genre> genres;
+
+    @OneToMany(mappedBy = "title")
+    private Set<TitleAuthorRole> titleAuthorRoles;
 }

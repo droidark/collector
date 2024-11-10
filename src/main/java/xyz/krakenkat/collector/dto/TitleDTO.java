@@ -8,6 +8,7 @@ import org.springframework.hateoas.server.core.Relation;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @AllArgsConstructor
@@ -26,4 +27,5 @@ public class TitleDTO {
     private String type;
     private Integer totalIssues;
     private List<String> genres;
+    private Map<String, String> authors;
 }
