@@ -16,6 +16,6 @@ public class PublisherSocialNetwork extends SocialNetwork {
 
     @JsonBackReference
     @ManyToOne
-    @JoinColumn(name = "id_publisher")
+    @JoinColumn(name = "publisher_id")
     private Publisher publisher;
 }

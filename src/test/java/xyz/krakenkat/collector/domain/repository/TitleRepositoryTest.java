@@ -41,7 +41,7 @@ class TitleRepositoryTest {
     @DisplayName("Should add a title")
     void should_add_a_title() {
         // Given
-        Publisher publisher = publisherRepository.findById(1L).get();
+        Publisher publisher = publisherRepository.findById(1L).orElseGet(Publisher::new);
         Title title = buildTitle(publisher);
 
         // When
