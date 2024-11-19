@@ -99,6 +99,21 @@ public class TitleUtilities {
 
     // SERVICE LAYER
 
+    public static TitleDTO buildTitleDTO() {
+        return TitleDTO.builder()
+                .name("Future Innovations Weekly")
+                .key("future_innovations_weekly")
+                .cover("https://examplepublisher.com/covers/future_innovations_weekly.png")
+                .demography("Technology Enthusiasts")
+                .format("Digital")
+                .frequency("Weekly")
+                .releaseDate(new Date())  // January 1, 2024
+                .status("Active")
+                .type("Magazine")
+                .totalIssues(5)
+                .build();
+    }
+
     public static List<TitleDTO> buildTitleDTOList() {
         List<TitleDTO> titles = new ArrayList<>();
 

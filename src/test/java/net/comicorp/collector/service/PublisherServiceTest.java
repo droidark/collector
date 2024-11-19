@@ -1,5 +1,10 @@
 package net.comicorp.collector.service;
 
+import net.comicorp.collector.domain.model.Publisher;
+import net.comicorp.collector.domain.repository.PublisherRepository;
+import net.comicorp.collector.dto.PublisherDTO;
+import net.comicorp.collector.exception.NoContentException;
+import net.comicorp.collector.service.impl.PublisherServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,32 +14,23 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import net.comicorp.collector.domain.model.Publisher;
-import net.comicorp.collector.domain.repository.PublisherRepository;
-import net.comicorp.collector.domain.repository.TitleRepository;
-import net.comicorp.collector.dto.PublisherDTO;
-import net.comicorp.collector.exception.NoContentException;
-import net.comicorp.collector.service.impl.PublisherServiceImpl;
 
 import java.util.Optional;
 
+import static net.comicorp.collector.util.PublisherUtilities.buildPublisherDTOList;
+import static net.comicorp.collector.util.PublisherUtilities.buildPublisherList;
+import static net.comicorp.collector.util.TestUtilities.generateRandomKey;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
-import static net.comicorp.collector.util.PublisherUtilities.buildPublisherDTOList;
-import static net.comicorp.collector.util.PublisherUtilities.buildPublisherList;
-import static net.comicorp.collector.util.TestUtilities.generateRandomKey;
 
 @ExtendWith(SpringExtension.class)
 class PublisherServiceTest {
 
     @Mock
     private PublisherRepository publisherRepository;
-
-    @Mock
-    private TitleRepository titleRepository;
 
     @Mock
     private MapperService mapperService;

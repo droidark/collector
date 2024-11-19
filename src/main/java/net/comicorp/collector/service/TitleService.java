@@ -13,5 +13,5 @@ public interface TitleService {
 
     TitleDTO getTitleByKeyAndPublisherKey(String key, String publisherKey) throws FieldNotValidException, NoContentException;
 
-    Page<IssueDTO> getAllIssuesByPublisherKeyAndTitleKey(String publisherKey, String titleKey, Boolean variant, Pageable pageable);
+    Page<IssueDTO> getAllIssuesByPublisherKeyAndTitleKey(String publisherKey, String titleKey, Boolean variant, Pageable pageable) throws FieldNotValidException ;
 }

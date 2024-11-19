@@ -21,19 +21,19 @@ import java.util.Objects;
 @RestController
 public class ResponseEntityExceptionHandle {
 
-    @ExceptionHandler(Exception.class)
-    public final ResponseEntity<ExceptionResponse> handleAllExceptions(WebRequest request) {
-        ExceptionResponse exceptionResponse = ExceptionResponse
-                .builder()
-                .error(HttpStatus.INTERNAL_SERVER_ERROR.toString())
-                .timestamp(Date.from(Instant.now()))
-                .detail(List.of(Detail
-                        .builder()
-                        .message(request.getDescription(false))
-                        .build()))
-                .build();
-        return ResponseEntity.internalServerError().body(exceptionResponse);
-    }
+//    @ExceptionHandler(Exception.class)
+//    public final ResponseEntity<ExceptionResponse> handleAllExceptions(WebRequest request) {
+//        ExceptionResponse exceptionResponse = ExceptionResponse
+//                .builder()
+//                .error(HttpStatus.INTERNAL_SERVER_ERROR.toString())
+//                .timestamp(Date.from(Instant.now()))
+//                .detail(List.of(Detail
+//                        .builder()
+//                        .message(request.getDescription(false))
+//                        .build()))
+//                .build();
+//        return ResponseEntity.internalServerError().body(exceptionResponse);
+//    }
 
     @ExceptionHandler(AccessDeniedException.class)
     public final ResponseEntity<ExceptionResponse> handleAccessDeniedException(WebRequest request) {
