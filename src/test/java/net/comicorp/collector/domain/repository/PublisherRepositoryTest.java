@@ -1,17 +1,17 @@
 package net.comicorp.collector.domain.repository;
 
+import net.comicorp.collector.domain.model.Publisher;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import net.comicorp.collector.domain.model.Publisher;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static net.comicorp.collector.util.PublisherUtilities.buildPublisher;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 class PublisherRepositoryTest {
@@ -21,7 +21,7 @@ class PublisherRepositoryTest {
 
     @Test
     @DisplayName("Should return all publishers")
-    void should_return_all_publishers() {
+    void shouldReturnAllPublishers() {
         // Given
         int expected = 5, pageNumber = 0, pageSize = 10;
 
@@ -35,7 +35,7 @@ class PublisherRepositoryTest {
 
     @Test
     @DisplayName("Should add a publisher")
-    void should_add_a_publisher() {
+    void shouldAddPublisher() {
         // Given
         Publisher publisher = buildPublisher();
 
@@ -48,7 +48,7 @@ class PublisherRepositoryTest {
 
     @Test
     @DisplayName("Should remove publisher")
-    void should_remove_publisher() {
+    void shouldRemovePublisher() {
         // Given
         long id = 1L;
         Optional<Publisher> publisher = repository.findById(id);
@@ -62,7 +62,7 @@ class PublisherRepositoryTest {
 
     @Test
     @DisplayName("Should return publisher by key")
-    void should_return_publisher_by_key() {
+    void shouldReturnPublisherByKey() {
         // Given
         String key = "ecolife";
 

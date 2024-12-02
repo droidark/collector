@@ -3,8 +3,15 @@ package net.comicorp.collector.domain.model;
 import jakarta.persistence.*;
 import lombok.*;
 import net.comicorp.collector.constant.Status;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.Set;
+
+import static net.comicorp.collector.constant.Constants.ROLE_PREFIX;
 
 @Entity
 @Table(name = "users")
@@ -13,7 +20,7 @@ import java.util.Date;
 @Getter
 @Setter
 @Builder
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -43,4 +50,36 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private Status status;
+
+    @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
+    private Set<Profile> profiles;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this
+                .getProfiles()
+                .stream()
+                .map(profile -> new SimpleGrantedAuthority(ROLE_PREFIX + profile.getProfileName()))
+                .toList();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

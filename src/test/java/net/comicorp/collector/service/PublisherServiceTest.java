@@ -40,7 +40,7 @@ class PublisherServiceTest {
 
     @Test
     @DisplayName("Should return all publishers")
-    void should_return_all_publishers() {
+    void shouldReturnAllPublishers() {
         // Given
         int pageNumber = 0, pageSize = 10, expected = 5;
 
@@ -60,7 +60,7 @@ class PublisherServiceTest {
 
     @Test
     @DisplayName("Should return publisher by key")
-    void should_return_publisher_by_key() {
+    void shouldReturnPublisherByKey() {
         // Given
         String key = "ecolife";
 
@@ -74,8 +74,8 @@ class PublisherServiceTest {
     }
 
     @Test()
-    @DisplayName("should_return_publisher_by_key_throws_NoContentException")
-    void should_return_publisher_by_key_throws_NoContentException() {
+    @DisplayName("should throw NoContentException given a publisher key")
+    void shouldThrowNoContentExceptionGivenPublisherKey() {
         // Given
         String key = generateRandomKey(5);
 
