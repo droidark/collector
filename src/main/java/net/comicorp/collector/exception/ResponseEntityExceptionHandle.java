@@ -2,6 +2,7 @@ package net.comicorp.collector.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -46,6 +47,19 @@ public class ResponseEntityExceptionHandle {
                         .build()))
                 .build();
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(exceptionResponse);
+    }
+
+    @ExceptionHandler(JwtException.class)
+    public final ResponseEntity<ExceptionResponse> handleJwtException(JwtException ex) {
+        ExceptionResponse exceptionResponse = ExceptionResponse
+                .builder().error(HttpStatus.BAD_REQUEST.toString())
+                .timestamp(Date.from(Instant.now()))
+                .detail(List.of(Detail
+                        .builder()
+                        .message(ex.getMessage())
+                        .build()))
+                .build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionResponse);
     }
 
     @ExceptionHandler(NoContentException.class)
@@ -98,21 +112,6 @@ public class ResponseEntityExceptionHandle {
                         .message(ex.getMessage())
                         .rejectedValue(ex.getRejectedValue())
                         .field(ex.getField())
-                        .build()))
-                .build();
-        return ResponseEntity.badRequest().body(exceptionResponse);
-    }
-
-    @ExceptionHandler({PublisherKeyNotFoundException.class,
-            TitleKeyNotFoundException.class})
-    public final ResponseEntity<ExceptionResponse> handleMissingArgumentKeyNotFoundException(Exception ex) {
-        ExceptionResponse exceptionResponse = ExceptionResponse
-                .builder()
-                .timestamp(Date.from(Instant.now()))
-                .error(HttpStatus.BAD_REQUEST.toString())
-                .detail(List.of(Detail
-                        .builder()
-                        .message(ex.getMessage())
                         .build()))
                 .build();
         return ResponseEntity.badRequest().body(exceptionResponse);

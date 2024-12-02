@@ -29,5 +29,5 @@ public class Genre {
             joinColumns = @JoinColumn(name = "genre_id"),
             inverseJoinColumns = @JoinColumn(name = "title_id")
     )
-    private Set<Title> titles = new HashSet<>();
+    private Set<Title> titles;
 }

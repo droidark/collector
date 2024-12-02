@@ -13,3 +13,15 @@ spring:
     properties:
       hibernate:
         show_sql: true
+application:
+  jwt:
+    access:
+      public-key: classpath:access-token-public.pem
+      private-key: classpath:access-token-private.pem
+    refresh:
+      public-key: classpath:refresh-token-public.pem
+      private-key: classpath:refresh-token-private.pem
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.security.oauth2: DEBUG

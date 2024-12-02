@@ -25,7 +25,7 @@ class TitleRepositoryTest {
 
     @Test
     @DisplayName("Should return all titles")
-    void should_return_all_title() {
+    void shouldReturnAllTitles() {
         // Given
         int expected = 25, pageNumber = 0, pageSize = 10;
 
@@ -39,7 +39,7 @@ class TitleRepositoryTest {
 
     @Test
     @DisplayName("Should add a title")
-    void should_add_a_title() {
+    void shouldAddTitle() {
         // Given
         Publisher publisher = publisherRepository.findById(1L).orElseGet(Publisher::new);
         Title title = buildTitle(publisher);
@@ -53,7 +53,7 @@ class TitleRepositoryTest {
 
     @Test
     @DisplayName("Should remove a title")
-    void should_remove_a_title() {
+    void shouldRemoveTitle() {
         // Given
         long id = 1L;
         Optional<Title> title = titleRepository.findById(id);
@@ -67,7 +67,7 @@ class TitleRepositoryTest {
 
     @Test
     @DisplayName("Should return all titles by publisher key")
-    void should_return_all_titles_by_publisher_key() {
+    void shouldReturnAllTitlesByPublisherKey() {
         // Given
         long id = 1L;
         String key = publisherRepository.findById(id).get().getKey();

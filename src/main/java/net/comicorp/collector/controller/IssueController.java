@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.comicorp.collector.dto.IssueDTO;
 import org.springframework.hateoas.PagedModel;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import static net.comicorp.collector.constant.Constants.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Tag(name = "Issue", description = "Issue API to execute CRUD operations")
 @RequestMapping("/issues")
@@ -32,7 +32,7 @@ public interface IssueController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Successful operation",
-                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = IssueDTO.class)), mediaType = MediaType.APPLICATION_JSON_VALUE)),
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = IssueDTO.class)), mediaType = APPLICATION_JSON_VALUE)),
             @ApiResponse(
                     responseCode = "204",
                     description = "No Content",

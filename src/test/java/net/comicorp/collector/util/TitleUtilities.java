@@ -1,16 +1,43 @@
 package net.comicorp.collector.util;
 
-import net.comicorp.collector.domain.model.Publisher;
-import net.comicorp.collector.domain.model.Title;
+import net.comicorp.collector.domain.model.*;
 import net.comicorp.collector.dto.TitleDTO;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.ZoneId;
+import java.util.*;
 
 public class TitleUtilities {
 
     public static Title buildTitle(Publisher publisher) {
+        Date releaseDate = Date.from(LocalDate
+                .of(2024, Month.NOVEMBER, 19)
+                .atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+        Set<Genre> genres = Set.of(
+                Genre.builder().id(1L).genreName("Adventure").build(),
+                Genre.builder().id(2L).genreName("Drama").build(),
+                Genre.builder().id(3L).genreName("Fiction").build());
+
+        Set<TitleAuthorRole> titleAuthorRoles = Set.of(
+                TitleAuthorRole
+                        .builder()
+                        .role(Role.builder().id(1L).roleName("writer").build())
+                        .author(Author.builder().id(1L).name("Amelia Brooks").build())
+                        .build(),
+                TitleAuthorRole
+                        .builder()
+                        .role(Role.builder().id(1L).roleName("writer").build())
+                        .author(Author.builder().id(2L).name("Jackson Reed").build())
+                        .build(),
+                TitleAuthorRole
+                        .builder()
+                        .role(Role.builder().id(2L).roleName("illustrator").build())
+                        .author(Author.builder().id(3L).name("Charlotte Mitchell").build())
+                        .build()
+        );
+
         return Title.builder()
                 .publisher(publisher)
                 .name("Future Innovations Weekly")
@@ -19,10 +46,12 @@ public class TitleUtilities {
                 .demography("Technology Enthusiasts")
                 .format("Digital")
                 .frequency("Weekly")
-                .releaseDate(new Date())  // January 1, 2024
+                .releaseDate(releaseDate)
                 .status("Active")
                 .type("Magazine")
                 .totalIssues(5)
+                .genres(genres)
+                .titleAuthorRoles(titleAuthorRoles)
                 .build();
     }
 
@@ -100,6 +129,16 @@ public class TitleUtilities {
     // SERVICE LAYER
 
     public static TitleDTO buildTitleDTO() {
+        Date releaseDate = Date.from(LocalDate
+                .of(2024, Month.NOVEMBER, 19)
+                .atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+        List<String> genres = List.of("Adventure", "Drama", "Fiction");
+
+        Map<String, List<String>> authors = Map.of(
+                "illustrator", List.of("Charlotte Mitchell"),
+                "writer", List.of("Amelia Brooks", "Jackson Reed"));
+
         return TitleDTO.builder()
                 .name("Future Innovations Weekly")
                 .key("future_innovations_weekly")
@@ -107,10 +146,12 @@ public class TitleUtilities {
                 .demography("Technology Enthusiasts")
                 .format("Digital")
                 .frequency("Weekly")
-                .releaseDate(new Date())  // January 1, 2024
+                .releaseDate(releaseDate)
                 .status("Active")
                 .type("Magazine")
                 .totalIssues(5)
+                .genres(genres)
+                .authors(authors)
                 .build();
     }
 

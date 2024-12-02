@@ -26,7 +26,7 @@ public class UserDTO {
     private String username;
 
     @NotNull
-    @NotBlank(message = USERNAME_BLANK)
+    @NotBlank(message = PASSWORD_BLANK)
     @Pattern(regexp = PASSWORD_REGEX,
             message = PASSWORD_EXCEPTION_MESSAGE)
     private String password;
