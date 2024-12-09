@@ -1,5 +1,7 @@
 package net.comicorp.collector.service;
 
+import net.comicorp.collector.component.KeyValidator;
+import net.comicorp.collector.component.Mapper;
 import net.comicorp.collector.domain.model.Issue;
 import net.comicorp.collector.domain.model.Title;
 import net.comicorp.collector.domain.repository.IssueRepository;
@@ -51,7 +53,7 @@ class TitleServiceTest {
     private KeyValidator keyValidator;
 
     @Mock
-    private MapperService mapperService;
+    private Mapper mapper;
 
     @InjectMocks
     private TitleServiceImpl titleService;
@@ -73,11 +75,11 @@ class TitleServiceTest {
 
         when(publisherRepository.existsByKey(anyString())).thenReturn(Boolean.TRUE);
         when(titleRepository.findByPublisherKey(key, PageRequest.of(pageNumber, pageSize))).thenReturn(new PageImpl<>(buildTitleList()));
-        when(mapperService.toTitleDTO(any(Title.class))).thenReturn(buildTitleDTOList().getFirst());
-        when(mapperService.toTitleDTO(any(Title.class))).thenReturn(buildTitleDTOList().get(1));
-        when(mapperService.toTitleDTO(any(Title.class))).thenReturn(buildTitleDTOList().get(2));
-        when(mapperService.toTitleDTO(any(Title.class))).thenReturn(buildTitleDTOList().get(3));
-        when(mapperService.toTitleDTO(any(Title.class))).thenReturn(buildTitleDTOList().getLast());
+        when(mapper.toTitleDTO(any(Title.class))).thenReturn(buildTitleDTOList().getFirst());
+        when(mapper.toTitleDTO(any(Title.class))).thenReturn(buildTitleDTOList().get(1));
+        when(mapper.toTitleDTO(any(Title.class))).thenReturn(buildTitleDTOList().get(2));
+        when(mapper.toTitleDTO(any(Title.class))).thenReturn(buildTitleDTOList().get(3));
+        when(mapper.toTitleDTO(any(Title.class))).thenReturn(buildTitleDTOList().getLast());
 
         Page<TitleDTO> result = titleService.getAllTitlesByPublisherKey(key, PageRequest.of(pageNumber, pageSize));
 
@@ -133,7 +135,7 @@ class TitleServiceTest {
                 .when(keyValidator).validateKey(eq(key), any(BooleanSupplier.class), eq(TITLE_KEY_NOT_FOUND_EXCEPTION_MESSAGE));
 
         when(titleRepository.findByKeyAndPublisherKey(key, publisherKey)).thenReturn(title);
-        when(mapperService.toTitleDTO(title.get())).thenReturn(buildTitleDTO());
+        when(mapper.toTitleDTO(title.get())).thenReturn(buildTitleDTO());
 
         TitleDTO result = titleService.getTitleByKeyAndPublisherKey(key, publisherKey);
 
@@ -159,7 +161,7 @@ class TitleServiceTest {
                 .when(keyValidator).validateKey(eq(key), any(BooleanSupplier.class), eq(TITLE_KEY_NOT_FOUND_EXCEPTION_MESSAGE));
 
         when(titleRepository.findByKeyAndPublisherKey(key, publisherKey)).thenReturn(Optional.empty());
-        when(mapperService.toTitleDTO(title.get())).thenThrow(NoContentException.class);
+        when(mapper.toTitleDTO(title.get())).thenThrow(NoContentException.class);
 
         // Then
         assertThrows(NoContentException.class, () -> titleService.getTitleByKeyAndPublisherKey(key, publisherKey));
@@ -243,16 +245,16 @@ class TitleServiceTest {
 
 
         when(issueRepository.findByPublisherKeyAndTitleKey(publisherKey, titleKey, Boolean.FALSE, PageRequest.of(pageNumber, pageSize))).thenReturn(new PageImpl<>(buildIssueList(Boolean.FALSE)));
-        when(mapperService.toIssueDTO(any(Issue.class))).thenReturn(buildIssueDTOList(Boolean.FALSE).getFirst());
-        when(mapperService.toIssueDTO(any(Issue.class))).thenReturn(buildIssueDTOList(Boolean.FALSE).get(1));
-        when(mapperService.toIssueDTO(any(Issue.class))).thenReturn(buildIssueDTOList(Boolean.FALSE).get(2));
-        when(mapperService.toIssueDTO(any(Issue.class))).thenReturn(buildIssueDTOList(Boolean.FALSE).get(3));
-        when(mapperService.toIssueDTO(any(Issue.class))).thenReturn(buildIssueDTOList(Boolean.FALSE).get(4));
-        when(mapperService.toIssueDTO(any(Issue.class))).thenReturn(buildIssueDTOList(Boolean.FALSE).get(5));
-        when(mapperService.toIssueDTO(any(Issue.class))).thenReturn(buildIssueDTOList(Boolean.FALSE).get(6));
-        when(mapperService.toIssueDTO(any(Issue.class))).thenReturn(buildIssueDTOList(Boolean.FALSE).get(7));
-        when(mapperService.toIssueDTO(any(Issue.class))).thenReturn(buildIssueDTOList(Boolean.FALSE).get(8));
-        when(mapperService.toIssueDTO(any(Issue.class))).thenReturn(buildIssueDTOList(Boolean.FALSE).getLast());
+        when(mapper.toIssueDTO(any(Issue.class))).thenReturn(buildIssueDTOList(Boolean.FALSE).getFirst());
+        when(mapper.toIssueDTO(any(Issue.class))).thenReturn(buildIssueDTOList(Boolean.FALSE).get(1));
+        when(mapper.toIssueDTO(any(Issue.class))).thenReturn(buildIssueDTOList(Boolean.FALSE).get(2));
+        when(mapper.toIssueDTO(any(Issue.class))).thenReturn(buildIssueDTOList(Boolean.FALSE).get(3));
+        when(mapper.toIssueDTO(any(Issue.class))).thenReturn(buildIssueDTOList(Boolean.FALSE).get(4));
+        when(mapper.toIssueDTO(any(Issue.class))).thenReturn(buildIssueDTOList(Boolean.FALSE).get(5));
+        when(mapper.toIssueDTO(any(Issue.class))).thenReturn(buildIssueDTOList(Boolean.FALSE).get(6));
+        when(mapper.toIssueDTO(any(Issue.class))).thenReturn(buildIssueDTOList(Boolean.FALSE).get(7));
+        when(mapper.toIssueDTO(any(Issue.class))).thenReturn(buildIssueDTOList(Boolean.FALSE).get(8));
+        when(mapper.toIssueDTO(any(Issue.class))).thenReturn(buildIssueDTOList(Boolean.FALSE).getLast());
 
         Page<IssueDTO> result = titleService.getAllIssuesByPublisherKeyAndTitleKey(publisherKey, titleKey, Boolean.FALSE, PageRequest.of(pageNumber, pageSize));
 

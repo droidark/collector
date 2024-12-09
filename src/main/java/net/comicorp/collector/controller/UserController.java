@@ -12,25 +12,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-@Tag(name = "User", description = "User API to execute CRUD operations")
+@RestController
 @RequestMapping("/users")
-public interface UserController {
+public class UserController {
 
-    @Operation(
-            summary = "Create a new user",
-            description = "Create a new user",
-            tags = {"user"}
-    )
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Successful operation",
-                    content = @Content(schema = @Schema(implementation = UserDTO.class), mediaType = APPLICATION_JSON_VALUE)
-            )
-    })
     @PostMapping("/signup")
-    ResponseEntity<UserDTO> createUser(@RequestBody @Valid UserDTO userDTO);
+    ResponseEntity<UserDTO> createUser(@RequestBody @Valid UserDTO userDTO) {
+        return ResponseEntity.ok(new UserDTO());
+    }
 }

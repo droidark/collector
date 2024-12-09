@@ -7,9 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.Set;
+import java.util.*;
 
 import static net.comicorp.collector.constant.Constants.ROLE_PREFIX;
 
@@ -54,10 +52,19 @@ public class User implements UserDetails {
     @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
     private Set<Profile> profiles;
 
+    @ManyToMany
+    @JoinTable(
+            name = "users_issues",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "issue_id")
+    )
+    private Set<Issue> issues;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this
-                .getProfiles()
+        return Optional
+                .ofNullable(this.getProfiles())
+                .orElse(Collections.emptySet())
                 .stream()
                 .map(profile -> new SimpleGrantedAuthority(ROLE_PREFIX + profile.getProfileName()))
                 .toList();

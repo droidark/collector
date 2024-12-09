@@ -1,5 +1,6 @@
 package net.comicorp.collector.service;
 
+import net.comicorp.collector.component.Mapper;
 import net.comicorp.collector.domain.model.Publisher;
 import net.comicorp.collector.domain.repository.PublisherRepository;
 import net.comicorp.collector.dto.PublisherDTO;
@@ -33,7 +34,7 @@ class PublisherServiceTest {
     private PublisherRepository publisherRepository;
 
     @Mock
-    private MapperService mapperService;
+    private Mapper mapper;
 
     @InjectMocks
     private PublisherServiceImpl publisherService;
@@ -46,11 +47,11 @@ class PublisherServiceTest {
 
         // When
         when(publisherRepository.findAll(any(PageRequest.class))).thenReturn(new PageImpl<>(buildPublisherList()));
-        when(mapperService.toPublisherDTO(any(Publisher.class))).thenReturn(buildPublisherDTOList().getFirst());
-        when(mapperService.toPublisherDTO(any(Publisher.class))).thenReturn(buildPublisherDTOList().get(1));
-        when(mapperService.toPublisherDTO(any(Publisher.class))).thenReturn(buildPublisherDTOList().get(2));
-        when(mapperService.toPublisherDTO(any(Publisher.class))).thenReturn(buildPublisherDTOList().get(3));
-        when(mapperService.toPublisherDTO(any(Publisher.class))).thenReturn(buildPublisherDTOList().getLast());
+        when(mapper.toPublisherDTO(any(Publisher.class))).thenReturn(buildPublisherDTOList().getFirst());
+        when(mapper.toPublisherDTO(any(Publisher.class))).thenReturn(buildPublisherDTOList().get(1));
+        when(mapper.toPublisherDTO(any(Publisher.class))).thenReturn(buildPublisherDTOList().get(2));
+        when(mapper.toPublisherDTO(any(Publisher.class))).thenReturn(buildPublisherDTOList().get(3));
+        when(mapper.toPublisherDTO(any(Publisher.class))).thenReturn(buildPublisherDTOList().getLast());
 
         Page<PublisherDTO> result = publisherService.getPublishers(PageRequest.of(pageNumber, pageSize));
 
@@ -66,7 +67,7 @@ class PublisherServiceTest {
 
         // When
         when(publisherRepository.findByKey(anyString())).thenReturn(Optional.of(buildPublisherList().getLast()));
-        when(mapperService.toPublisherDTO(any(Publisher.class))).thenReturn(buildPublisherDTOList().getLast());
+        when(mapper.toPublisherDTO(any(Publisher.class))).thenReturn(buildPublisherDTOList().getLast());
         PublisherDTO result = publisherService.getPublisherByKey(key);
 
         // Then
@@ -81,7 +82,7 @@ class PublisherServiceTest {
 
         // When
         when(publisherRepository.findByKey(anyString())).thenReturn(Optional.empty());
-        when(mapperService.toPublisherDTO(any(Publisher.class))).thenThrow(NoContentException.class);
+        when(mapper.toPublisherDTO(any(Publisher.class))).thenThrow(NoContentException.class);
 
         // Then
         assertThrows(NoContentException.class, () -> publisherService.getPublisherByKey(key));

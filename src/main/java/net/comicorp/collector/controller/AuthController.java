@@ -1,53 +1,32 @@
 package net.comicorp.collector.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import net.comicorp.collector.dto.RefreshDTO;
 import net.comicorp.collector.dto.TokenDTO;
+import net.comicorp.collector.service.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-
-@Tag(name = "Login", description = "Endpoint to login in API environment")
+@RestController
 @RequestMapping("/auth")
-public interface AuthController {
+@RequiredArgsConstructor
+public class AuthController {
 
-    @Operation(
-            summary = "Login",
-            description = "Login",
-            tags = {"login"}
-    )
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Successful operation",
-                    content = @Content(schema = @Schema(implementation = TokenDTO.class), mediaType = APPLICATION_JSON_VALUE)
-            )
-    })
+    private final AuthService authService;
+
     @PostMapping("/login")
-    ResponseEntity<TokenDTO> login(Authentication authentication);
+    ResponseEntity<TokenDTO> login(Authentication authentication) {
+        return ResponseEntity.ok(authService.login(authentication));
+    }
 
-    @Operation(
-            summary = "Refresh",
-            description = "Refresh a expired token",
-            tags = {"login"}
-    )
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Successful operation",
-                    content = @Content(schema = @Schema(implementation = TokenDTO.class), mediaType = APPLICATION_JSON_VALUE)
-            )
-    })
     @PostMapping("/refresh")
-    ResponseEntity<TokenDTO> refresh(@RequestBody RefreshDTO refreshDTO);
-
+    ResponseEntity<TokenDTO> refresh(@RequestBody RefreshDTO refreshDTO) {
+        return (refreshDTO.getRefreshToken() == null || refreshDTO.getRefreshToken().isBlank())
+                ? ResponseEntity.badRequest().build()
+                : ResponseEntity.ok(authService.refreshToken(refreshDTO));
+    }
 }

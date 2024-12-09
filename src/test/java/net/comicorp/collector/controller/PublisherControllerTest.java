@@ -25,6 +25,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -55,7 +56,11 @@ class PublisherControllerTest {
         RequestBuilder request = MockMvcRequestBuilders
                 .get("/publishers")
                 .params(params)
-                .accept(APPLICATION_JSON_VALUE);
+                .accept(APPLICATION_JSON_VALUE)
+                .with(jwt().jwt(jwt ->
+                        jwt.claim("username", "test")
+                        .claim("role", "ROLE_ADMIN")
+                ));
 
         mockMvc.perform(request)
                 .andExpect(status().isOk())
@@ -69,7 +74,13 @@ class PublisherControllerTest {
         when(publisherService.getPublishers(any(PageRequest.class))).thenReturn(Page.empty());
 
         RequestBuilder request = MockMvcRequestBuilders
-                .get("/publishers").accept(APPLICATION_JSON_VALUE);
+                .get("/publishers")
+                .accept(APPLICATION_JSON_VALUE)
+                .with(jwt().jwt(jwt ->
+                        jwt
+                                .claim("username", "test")
+                                .claim("role", "ROLE_ADMIN")
+                ));
 
         mockMvc.perform(request)
                 .andExpect(status().isNoContent());
@@ -86,7 +97,12 @@ class PublisherControllerTest {
 
         RequestBuilder request = MockMvcRequestBuilders
                 .get("/publishers/{key}", key)
-                .accept(APPLICATION_JSON_VALUE);
+                .accept(APPLICATION_JSON_VALUE)
+                .with(jwt().jwt(jwt ->
+                        jwt
+                                .claim("username", "test")
+                                .claim("role", "ROLE_ADMIN")
+                ));
 
         // Then
         mockMvc.perform(request)
@@ -106,7 +122,12 @@ class PublisherControllerTest {
 
         RequestBuilder request = MockMvcRequestBuilders
                 .get("/publishers/{key}", key)
-                .accept(APPLICATION_JSON_VALUE);
+                .accept(APPLICATION_JSON_VALUE)
+                .with(jwt().jwt(jwt ->
+                        jwt
+                                .claim("username", "test")
+                                .claim("role", "ROLE_ADMIN")
+                ));
 
         // Then
         mockMvc.perform(request)
@@ -124,7 +145,12 @@ class PublisherControllerTest {
 
         RequestBuilder request = MockMvcRequestBuilders
                 .get("/publishers/{key}/titles", key)
-                .accept(APPLICATION_JSON_VALUE);
+                .accept(APPLICATION_JSON_VALUE)
+                .with(jwt().jwt(jwt ->
+                        jwt
+                                .claim("username", "test")
+                                .claim("role", "ROLE_ADMIN")
+                ));
 
         // Then
         mockMvc.perform(request)
@@ -144,7 +170,12 @@ class PublisherControllerTest {
 
         RequestBuilder request = MockMvcRequestBuilders
                 .get("/publishers/{key}/titles", key)
-                .accept(APPLICATION_JSON_VALUE);
+                .accept(APPLICATION_JSON_VALUE)
+                .with(jwt().jwt(jwt ->
+                        jwt
+                                .claim("username", "test")
+                                .claim("role", "ROLE_ADMIN")
+                ));
 
         // Then
         mockMvc.perform(request)

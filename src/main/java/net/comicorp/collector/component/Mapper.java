@@ -1,4 +1,4 @@
-package net.comicorp.collector.service.impl;
+package net.comicorp.collector.component;
 
 import lombok.RequiredArgsConstructor;
 import net.comicorp.collector.domain.model.*;
@@ -6,10 +6,9 @@ import net.comicorp.collector.dto.IssueDTO;
 import net.comicorp.collector.dto.PublisherDTO;
 import net.comicorp.collector.dto.SocialNetworkDTO;
 import net.comicorp.collector.dto.TitleDTO;
-import net.comicorp.collector.service.MapperService;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
@@ -17,33 +16,28 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Service
+@Component
 @RequiredArgsConstructor
-public class MapperServiceImpl implements MapperService {
+public class Mapper {
 
     private final ModelMapper modelMapper;
 
-    @Override
     public PublisherDTO toPublisherDTO(Publisher publisher) {
         return this.modelMapper.map(publisher, PublisherDTO.class);
     }
 
-    @Override
     public SocialNetworkDTO toSocialNetworkDTO(PublisherSocialNetwork publisherSocialNetwork) {
         return this.modelMapper.map(publisherSocialNetwork, SocialNetworkDTO.class);
     }
 
-    @Override
     public Publisher toPublisher(PublisherDTO publisherDTO) {
         return this.modelMapper.map(publisherDTO, Publisher.class);
     }
 
-    @Override
     public PublisherSocialNetwork toPublisherSocialNetwork(SocialNetworkDTO socialNetworkDTO) {
         return this.modelMapper.map(socialNetworkDTO, PublisherSocialNetwork.class);
     }
 
-    @Override
     public TitleDTO toTitleDTO(Title title) {
         // Convert genres from Set<Genre> to List<String>
         Converter<Set<Genre>, List<String>> genreConverter = context ->
@@ -78,7 +72,6 @@ public class MapperServiceImpl implements MapperService {
         return this.modelMapper.map(title, TitleDTO.class);
     }
 
-    @Override
     public IssueDTO toIssueDTO(Issue issue) {
         return this.modelMapper.map(issue, IssueDTO.class);
     }

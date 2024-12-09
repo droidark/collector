@@ -31,7 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
-/src/main/resources/access-token-private.pem
-/src/main/resources/access-token-public.pem
-/src/main/resources/refresh-token-private.pem
-/src/main/resources/refresh-token-public.pem
+/src/main/resources/keys/access-token-private.pem
+/src/main/resources/keys/access-token-public.pem
+/src/main/resources/keys/refresh-token-private.pem
+/src/main/resources/keys/refresh-token-public.pem
