@@ -1,5 +1,7 @@
 package net.comicorp.collector.service;
 
+import net.comicorp.collector.component.KeyValidator;
+import net.comicorp.collector.component.Mapper;
 import net.comicorp.collector.domain.model.Issue;
 import net.comicorp.collector.domain.repository.IssueRepository;
 import net.comicorp.collector.dto.IssueDTO;
@@ -38,7 +40,7 @@ class IssueServiceTest {
     private KeyValidator keyValidator;
 
     @Mock
-    private MapperService mapperService;
+    private Mapper mapper;
 
     @InjectMocks
     private IssueServiceImpl issueService;
@@ -68,7 +70,7 @@ class IssueServiceTest {
 
         when(issueRepository.findByKeyAndPublisherKeyAndTitleKey(publisherKey, titleKey, issueKey, Boolean.TRUE, pageable)).thenReturn(issues);
 
-        when(mapperService.toIssueDTO(any(Issue.class))).thenReturn(buildSingleIssueDTO(Boolean.TRUE).getFirst());
+        when(mapper.toIssueDTO(any(Issue.class))).thenReturn(buildSingleIssueDTO(Boolean.TRUE).getFirst());
 
         Page<IssueDTO> result = issueService.getByKeyAndPublisherKeyAndTitleKey(publisherKey, titleKey, issueKey, Boolean.TRUE, pageable);
 

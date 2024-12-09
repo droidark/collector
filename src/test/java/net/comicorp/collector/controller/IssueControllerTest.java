@@ -22,6 +22,7 @@ import static net.comicorp.collector.util.TestUtilities.fromFile;
 import static net.comicorp.collector.util.TestUtilities.generateRandomKey;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -50,7 +51,12 @@ class IssueControllerTest {
         RequestBuilder request = MockMvcRequestBuilders
                 .get("/issues/{issueKey}", generateRandomKey(2))
                 .params(params)
-                .accept(MediaType.APPLICATION_JSON_VALUE);
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .with(jwt().jwt(jwt ->
+                        jwt
+                                .claim("username", "test")
+                                .claim("role", "ROLE_ADMIN")
+                ));
 
         mockMvc.perform(request)
                 .andExpect(status().isOk())
@@ -74,7 +80,12 @@ class IssueControllerTest {
         RequestBuilder request = MockMvcRequestBuilders
                 .get("/issues/{issueKey}", generateRandomKey(2))
                 .params(params)
-                .accept(MediaType.APPLICATION_JSON_VALUE);
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .with(jwt().jwt(jwt ->
+                        jwt
+                                .claim("username", "test")
+                                .claim("role", "ROLE_ADMIN")
+                ));
 
         mockMvc.perform(request)
                 .andExpect(status().isNoContent());
@@ -96,7 +107,12 @@ class IssueControllerTest {
         RequestBuilder request = MockMvcRequestBuilders
                 .get("/issues/{issueKey}", generateRandomKey(2))
                 .params(params)
-                .accept(MediaType.APPLICATION_JSON_VALUE);
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .with(jwt().jwt(jwt ->
+                        jwt
+                                .claim("username", "test")
+                                .claim("role", "ROLE_ADMIN")
+                ));
 
         mockMvc.perform(request)
                 .andExpect(status().isBadRequest());

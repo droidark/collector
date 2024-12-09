@@ -1,4 +1,4 @@
-package net.comicorp.collector.service;
+package net.comicorp.collector.component;
 
 import net.comicorp.collector.domain.model.Issue;
 import net.comicorp.collector.domain.model.Publisher;
@@ -8,7 +8,6 @@ import net.comicorp.collector.dto.IssueDTO;
 import net.comicorp.collector.dto.PublisherDTO;
 import net.comicorp.collector.dto.SocialNetworkDTO;
 import net.comicorp.collector.dto.TitleDTO;
-import net.comicorp.collector.service.impl.MapperServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,13 +23,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-class MapperServiceTest {
+class MapperTest {
 
     @Mock
     private ModelMapper modelMapper;
 
     @InjectMocks
-    private MapperServiceImpl mapperService;
+    private Mapper mapper;
 
     @Test
     void shouldMapPublisherToPublisherDTO() {
@@ -40,7 +39,7 @@ class MapperServiceTest {
         when(modelMapper.map(publisher, PublisherDTO.class)).thenReturn(expectedDTO);
 
         // Act
-        PublisherDTO actualDTO = mapperService.toPublisherDTO(publisher);
+        PublisherDTO actualDTO = mapper.toPublisherDTO(publisher);
 
         // Assert
         assertEquals(expectedDTO, actualDTO);
@@ -55,7 +54,7 @@ class MapperServiceTest {
         when(modelMapper.map(socialNetwork, SocialNetworkDTO.class)).thenReturn(expectedDTO);
 
         // Act
-        SocialNetworkDTO actualDTO = mapperService.toSocialNetworkDTO(socialNetwork);
+        SocialNetworkDTO actualDTO = mapper.toSocialNetworkDTO(socialNetwork);
 
         // Assert
         assertEquals(expectedDTO, actualDTO);
@@ -70,7 +69,7 @@ class MapperServiceTest {
         when(modelMapper.map(publisherDTO, Publisher.class)).thenReturn(expectedPublisher);
 
         // Act
-        Publisher actualPublisher = mapperService.toPublisher(publisherDTO);
+        Publisher actualPublisher = mapper.toPublisher(publisherDTO);
 
         // Assert
         assertEquals(expectedPublisher, actualPublisher);
@@ -85,7 +84,7 @@ class MapperServiceTest {
         when(modelMapper.map(socialNetworkDTO, PublisherSocialNetwork.class)).thenReturn(expectedSocialNetwork);
 
         // Act
-        PublisherSocialNetwork actualSocialNetwork = mapperService.toPublisherSocialNetwork(socialNetworkDTO);
+        PublisherSocialNetwork actualSocialNetwork = mapper.toPublisherSocialNetwork(socialNetworkDTO);
 
         // Assert
         assertEquals(expectedSocialNetwork, actualSocialNetwork);
@@ -100,8 +99,8 @@ class MapperServiceTest {
         when(modelMapper.map(title, TitleDTO.class)).thenReturn(expectedDTO);
 
         // Act
-        mapperService = new MapperServiceImpl(new ModelMapper()); // Inject real ModelMapper
-        TitleDTO actualDTO = mapperService.toTitleDTO(title);
+        mapper = new Mapper(new ModelMapper()); // Inject real ModelMapper
+        TitleDTO actualDTO = mapper.toTitleDTO(title);
 
         // Assert
         assertEquals(expectedDTO.getGenres(), actualDTO.getGenres());
@@ -116,7 +115,7 @@ class MapperServiceTest {
         when(modelMapper.map(issue, IssueDTO.class)).thenReturn(expectedDTO);
 
         // Act
-        IssueDTO actualDTO = mapperService.toIssueDTO(issue);
+        IssueDTO actualDTO = mapper.toIssueDTO(issue);
 
         // Assert
         assertEquals(expectedDTO, actualDTO);

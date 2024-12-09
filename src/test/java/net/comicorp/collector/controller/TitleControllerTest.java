@@ -27,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -53,7 +54,12 @@ class TitleControllerTest {
         RequestBuilder request = MockMvcRequestBuilders
                 .get("/titles/{key}", titleKey)
                 .params(params)
-                .accept(MediaType.APPLICATION_JSON_VALUE);
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .with(jwt().jwt(jwt ->
+                        jwt
+                                .claim("username", "test")
+                                .claim("role", "ROLE_ADMIN")
+                ));
 
         // Then
         mockMvc.perform(request)
@@ -74,7 +80,12 @@ class TitleControllerTest {
         RequestBuilder request = MockMvcRequestBuilders
                 .get("/titles/{key}", titleKey)
                 .params(params) // No publisher key added here
-                .accept(MediaType.APPLICATION_JSON_VALUE);
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .with(jwt().jwt(jwt ->
+                        jwt
+                                .claim("username", "test")
+                                .claim("role", "ROLE_ADMIN")
+                ));
 
         // Then
         mockMvc.perform(request)
@@ -101,7 +112,12 @@ class TitleControllerTest {
         RequestBuilder request = MockMvcRequestBuilders
                 .get("/titles/{titleKey}/issues", titleKey)
                 .params(params)
-                .accept(MediaType.APPLICATION_JSON_VALUE);
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .with(jwt().jwt(jwt ->
+                        jwt
+                                .claim("username", "test")
+                                .claim("role", "ROLE_ADMIN")
+                ));
 
         // Then
         mockMvc.perform(request)
@@ -125,7 +141,12 @@ class TitleControllerTest {
         RequestBuilder request = MockMvcRequestBuilders
                 .get("/titles/{titleKey}/issues", titleKey)
                 .params(params)
-                .accept(MediaType.APPLICATION_JSON_VALUE);
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .with(jwt().jwt(jwt ->
+                        jwt
+                                .claim("username", "test")
+                                .claim("role", "ROLE_ADMIN")
+                ));
 
         // Then
         mockMvc.perform(request)

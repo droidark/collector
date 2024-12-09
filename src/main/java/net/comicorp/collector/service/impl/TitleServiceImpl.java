@@ -1,19 +1,19 @@
 package net.comicorp.collector.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import net.comicorp.collector.component.KeyValidator;
+import net.comicorp.collector.component.Mapper;
 import net.comicorp.collector.domain.repository.IssueRepository;
-import net.comicorp.collector.dto.IssueDTO;
-import net.comicorp.collector.service.KeyValidator;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 import net.comicorp.collector.domain.repository.PublisherRepository;
 import net.comicorp.collector.domain.repository.TitleRepository;
+import net.comicorp.collector.dto.IssueDTO;
 import net.comicorp.collector.dto.TitleDTO;
 import net.comicorp.collector.exception.FieldNotValidException;
 import net.comicorp.collector.exception.NoContentException;
-import net.comicorp.collector.service.MapperService;
 import net.comicorp.collector.service.TitleService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import static net.comicorp.collector.constant.Constants.PUBLISHER_KEY_NOT_FOUND_EXCEPTION_MESSAGE;
 import static net.comicorp.collector.constant.Constants.TITLE_KEY_NOT_FOUND_EXCEPTION_MESSAGE;
@@ -30,7 +30,7 @@ public class TitleServiceImpl implements TitleService {
 
     private final KeyValidator keyValidator;
 
-    private final MapperService mapper;
+    private final Mapper mapper;
 
     @Override
     public Page<TitleDTO> getAllTitlesByPublisherKey(String publisherKey, Pageable pageable) throws FieldNotValidException {

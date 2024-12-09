@@ -1,13 +1,13 @@
 package net.comicorp.collector.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import net.comicorp.collector.component.KeyValidator;
+import net.comicorp.collector.component.Mapper;
 import net.comicorp.collector.domain.repository.IssueRepository;
 import net.comicorp.collector.domain.repository.PublisherRepository;
 import net.comicorp.collector.domain.repository.TitleRepository;
 import net.comicorp.collector.dto.IssueDTO;
 import net.comicorp.collector.service.IssueService;
-import net.comicorp.collector.service.KeyValidator;
-import net.comicorp.collector.service.MapperService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ public class IssueServiceImpl implements IssueService {
 
     private final KeyValidator keyValidator;
 
-    private final MapperService mapper;
+    private final Mapper mapper;
 
     @Override
     public Page<IssueDTO> getByKeyAndPublisherKeyAndTitleKey(String publisherKey, String titleKey, String key, Boolean variant, Pageable pageable) {

@@ -1,5 +1,7 @@
 package net.comicorp.collector.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -58,4 +60,9 @@ public class Title {
 
     @OneToMany(mappedBy = "title")
     private Set<TitleAuthorRole> titleAuthorRoles;
+
+    @JsonManagedReference
+    @JsonIgnoreProperties("title")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "title", cascade = CascadeType.ALL)
+    private Set<Issue> issues;
 }

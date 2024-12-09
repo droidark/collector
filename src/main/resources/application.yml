@@ -16,12 +16,13 @@ spring:
 application:
   jwt:
     access:
-      public-key: classpath:access-token-public.pem
-      private-key: classpath:access-token-private.pem
+      public-key: classpath:keys/access-token-public.pem
+      private-key: classpath:keys/access-token-private.pem
     refresh:
-      public-key: classpath:refresh-token-public.pem
-      private-key: classpath:refresh-token-private.pem
+      public-key: classpath:keys/refresh-token-public.pem
+      private-key: classpath:keys/refresh-token-private.pem
 logging:
   level:
     org.springframework.security: DEBUG
     org.springframework.security.oauth2: DEBUG
+    org.springframework.web: DEBUG

@@ -1,7 +1,6 @@
-package net.comicorp.collector.service;
+package net.comicorp.collector.component;
 
 import net.comicorp.collector.exception.FieldNotValidException;
-import net.comicorp.collector.service.impl.KeyValidatorImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,7 +16,7 @@ import static org.mockito.Mockito.when;
 class KeyValidatorTest {
 
     @InjectMocks
-    private KeyValidatorImpl keyValidator;
+    private KeyValidator keyValidator;
 
     @Test
     void shouldThrowExceptionWhenKeyDoesNotExist() {

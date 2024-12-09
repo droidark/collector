@@ -1,99 +1,50 @@
 package net.comicorp.collector.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import net.comicorp.collector.dto.PublisherDTO;
 import net.comicorp.collector.dto.TitleDTO;
 import net.comicorp.collector.exception.NoContentException;
+import net.comicorp.collector.service.PublisherService;
+import net.comicorp.collector.service.TitleService;
+import org.springframework.data.domain.Page;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
-import static net.comicorp.collector.constant.Constants.*;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static net.comicorp.collector.util.Utilities.buildPage;
+import static net.comicorp.collector.util.Utilities.buildPagedModel;
 
-@Tag(name = "Publisher", description = "Publisher API to execute CRUD operations")
+@RestController
 @RequestMapping("/publishers")
-public interface PublisherController {
+@RequiredArgsConstructor
+public class PublisherController {
 
-    @Operation(
-            summary = "Get all publishers",
-            description = "Retrieve all publishers supported by collector.",
-            tags = {"publisher"})
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Successful operation",
-                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = PublisherDTO.class)), mediaType = APPLICATION_JSON_VALUE)),
-            @ApiResponse(
-                    responseCode = "204",
-                    description = "No Content",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "Unauthorized",
-                    content = @Content
-            )
-    })
+    private final PublisherService publisherService;
+
+    private final TitleService titleService;
+
     @GetMapping
     ResponseEntity<PagedModel<PublisherDTO>> retrieveAllPublishers(
-            @Parameter(description = PAGE_DESCRIPTION) @RequestParam(defaultValue = "0") int page,
-            @Parameter(description = SIZE_DESCRIPTION) @RequestParam(defaultValue = "10") int size,
-            @Parameter(description = SORT_DESCRIPTION) @RequestParam(defaultValue = "name,asc") String[] sort);
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "name,asc") String[] sort) {
+        Page<PublisherDTO> publisherDTOPage = publisherService.getPublishers(buildPage(page, size, sort));
+        return publisherDTOPage.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(buildPagedModel(publisherDTOPage));
+    }
 
-    @Operation(
-            summary = "Get publisher by key",
-            description = "Retrieve the publisher that match with the publisher-key",
-            tags = {"publisher"})
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Successful operation",
-                    content = @Content(schema = @Schema(implementation = PublisherDTO.class), mediaType = APPLICATION_JSON_VALUE)),
-            @ApiResponse(
-                    responseCode = "204",
-                    description = "No Content",
-                    content = @Content),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "Unauthorized",
-                    content = @Content
-            )
-    })
     @GetMapping("/{key}")
     ResponseEntity<PublisherDTO> retrievePublisherByKey(
-            @Parameter(description = "Publisher key, cannot be empty", required = true) @PathVariable String key) throws NoContentException;
+            @PathVariable String key) throws NoContentException {
+        return ResponseEntity.ok(publisherService.getPublisherByKey(key));
+    }
 
-
-    @Operation(
-            summary = "Get all titles edited by specific publisher",
-            description = "Retrieve all published titles by specific publisher.",
-            tags = {"publisher", "title"})
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Successful operation",
-                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = TitleDTO.class)), mediaType = APPLICATION_JSON_VALUE)),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "Unauthorized",
-                    content = @Content
-            )
-    })
     @GetMapping("/{publisherKey}/titles")
     ResponseEntity<PagedModel<TitleDTO>> retrieveAllTitlesByKey(
-            @Parameter(description = "Publisher key, cannot be empty", required = true) @PathVariable String publisherKey,
-            @Parameter(description = PAGE_DESCRIPTION) @RequestParam(defaultValue = "0") int page,
-            @Parameter(description = SIZE_DESCRIPTION) @RequestParam(defaultValue = "10") int size,
-            @Parameter(description = SORT_DESCRIPTION) @RequestParam(defaultValue = "name,asc") String[] sort);
+            @PathVariable String publisherKey,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "name,asc") String[] sort) {
+        Page<TitleDTO> titleDTOPage = titleService.getAllTitlesByPublisherKey(publisherKey, buildPage(page, size, sort));
+        return titleDTOPage.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(buildPagedModel(titleDTOPage));
+    }
 }

@@ -42,6 +42,16 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableMethodSecurity
 public class SecurityConfig {
 
+    private static final String[] SWAGGER_WHITELIST = {
+            "/swagger-ui.html",
+            "/swagger-ui/",
+            "/swagger-ui/**",
+            "/swagger-resources/**",
+            "/swagger-resources",
+            "/v3/api-docs/**",
+            "/proxy/**"
+    };
+
     @Value("${application.jwt.access.public-key}")
     RSAPublicKey accessPublicKey;
 
@@ -63,12 +73,10 @@ public class SecurityConfig {
         http
                 .addFilterBefore(customJwtFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/login", "/signup", "/v3/api-docs/**", "/swagger-ui/**")
-                        .permitAll()
-                        .requestMatchers("/refresh")
-                        .authenticated()
-                        .anyRequest()
-                        .authenticated())
+                        .requestMatchers("/login", "/signup").permitAll()
+                        .requestMatchers(SWAGGER_WHITELIST).permitAll()
+                        .requestMatchers("/refresh").authenticated()
+                        .anyRequest().authenticated())
                 .authenticationManager(authenticationManager(http))
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)

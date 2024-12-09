@@ -1,6 +1,5 @@
 package net.comicorp.collector.dto;
 
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,11 +19,11 @@ public class IssueDTO {
 
     private String name;
     private String key;
-    private Double number;
+    private Float number;
     private String cover;
     private Integer pages;
-    private Double printedPrice;
-    private Double digitalPrice;
+    private Float printedPrice;
+    private Float digitalPrice;
     private String currency;
     private Date releaseDate;
     private String shortReview;
@@ -36,4 +35,5 @@ public class IssueDTO {
     private Boolean variant;
     private Integer likesCounter;
     private Integer dislikesCounter;
+    private Boolean collected;
 }

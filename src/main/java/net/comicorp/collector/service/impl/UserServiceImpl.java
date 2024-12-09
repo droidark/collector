@@ -15,7 +15,7 @@ import static net.comicorp.collector.constant.Constants.USER_NOT_FOUND_EXCEPTION
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class UserDetailManagerImpl implements UserDetailsManager {
+public class UserServiceImpl implements UserDetailsManager {
 
     private final UserRepository userRepository;
 
@@ -46,7 +46,6 @@ public class UserDetailManagerImpl implements UserDetailsManager {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        log.info("loadUserByUsername " + username);
         return userRepository
                 .findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(

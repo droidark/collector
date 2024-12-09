@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.5</version>
+        <version>3.4.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>net.comicorp</groupId>
@@ -14,10 +14,10 @@
     <name>collector</name>
     <description>collector</description>
     <properties>
-        <java.version>22</java.version>
-        <modelmapper.version>3.2.1</modelmapper.version>
+        <java.version>23</java.version>
+        <modelmapper.version>3.2.2</modelmapper.version>
         <jacoco.version>0.8.12</jacoco.version>
-        <springdoc-openapi.version>2.6.0</springdoc-openapi.version>
+        <springdoc-openapi.version>2.7.0</springdoc-openapi.version>
         <jakarta.validation.version>3.1.0</jakarta.validation.version>
     </properties>
     <dependencies>
@@ -78,6 +78,13 @@
         </dependency>
 
         <dependency>
+            <groupId>io.swagger.parser.v3</groupId>
+            <artifactId>swagger-parser-v3</artifactId>
+            <version>2.1.24</version>
+        </dependency>
+
+
+        <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>test</scope>
@@ -88,6 +95,13 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>

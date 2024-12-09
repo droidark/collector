@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm" version="2.2">
+    <named-query name="Issue.findByUserAndTitleAndPublisher">
+        <query>
+            SELECT i
+            FROM Issue i
+            JOIN i.title t
+            JOIN t.publisher p
+            JOIN User u ON i MEMBER OF u.issues
+            WHERE u.username = :username
+            AND t.key = :titleKey
+            AND p.key = :publisherKey
+        </query>
+    </named-query>
+    <named-query name="Issue.findByTitlePublisherAndKeys">
+        <query>
+            SELECT i
+            FROM Issue i
+            JOIN i.title t
+            JOIN t.publisher p
+            WHERE t.key = :titleKey
+            AND p.key = :publisherKey
+            AND i.key IN :keys
+        </query>
+    </named-query>
+</entity-mappings>
+

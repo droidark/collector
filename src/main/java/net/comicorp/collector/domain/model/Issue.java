@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "issues")
@@ -12,6 +13,7 @@ import java.util.Date;
 @Getter
 @Setter
 @Builder
+@EqualsAndHashCode
 public class Issue {
 
     @Id
@@ -78,4 +80,7 @@ public class Issue {
     @ManyToOne
     @JoinColumn(name = "title_id")
     private Title title;
+
+    @ManyToMany(mappedBy = "issues")
+    private Set<User> users;
 }

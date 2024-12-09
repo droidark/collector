@@ -1,0 +1,667 @@
+openapi: 3.0.1
+info:
+  title: COMICORP | Collector
+  description: We're making our own whakoom with blackjack and hookers
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/collector/v1
+tags:
+  - name: Auth
+    description: All endpoints regarding to login and refresh tokens
+  - name: Collections
+    description: Endpoint to manage user's collection
+  - name: Publishers
+    description: Publisher API to execute CRUD operations
+  - name: Titles
+    description: Title API to execute CRUD operations
+  - name: Issues
+    description: Issue API to execute CRUD operations
+paths:
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Login
+      description: Login endpoint to get a valid token to interact with the API
+      operationId: login
+      responses:
+        '200':
+          description: Token information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+  /auth/refresh:
+    post:
+      tags:
+        - Auth
+      summary: Refresh Token
+      description: Refresh endpoint to get a new token to interact with the API
+      operationId: refresh
+      requestBody:
+        description: Refresh token
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Refresh'
+      responses:
+        '200':
+          description: Token information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+  /collections:
+    get:
+      tags:
+       - Collections
+      summary: Get user collected titles
+      description: Retrieve collected titles by user
+      operationId: getCollectedTitles
+      parameters:
+        - name: page
+          in: query
+          description: Zero based page index (0... N)
+          required: false
+          explode: true
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          description: Number of records per page
+          required: false
+          explode: true
+          schema:
+            type: integer
+            default: 10
+        - name: sort
+          in: query
+          description: 'Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported'
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: name,asc
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TitleList'
+        '204':
+          description: 'No Content'
+        '401':
+          description: 'Unauthorized'
+  /collections/{titleKey}/issues:
+    get:
+      tags:
+        - Collections
+      summary: Get user collected issues given title and publisher
+      description: Retrieve user collected issues by title and publisher
+      operationId: getCollectedIssues
+      parameters:
+        - name: titleKey
+          in: path
+          description: Title key
+          required: true
+          schema:
+            type: string
+        - name: publisher
+          in: query
+          description: Publisher key
+          required: true
+          explode: true
+          schema:
+            type: string
+        - name: collected
+          in: query
+          description: Flag to indicate whether the issue was collected by the user. If this parameter is not provided, the response will include all issues, with a flag indicating the status for each issue
+          required: false
+          explode: true
+          schema:
+            type: boolean
+        - name: variant
+          in: query
+          description: Flag to indicate whether the issue is a variant cover of another. If this parameter is not provided, the response will include all issues, with a flag indicating whether each issue is a variant or not
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: Zero based page index (0... N)
+          required: false
+          explode: true
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          description: Number of records per page
+          required: false
+          explode: true
+          schema:
+            type: integer
+            default: 10
+        - name: sort
+          in: query
+          description: 'Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported'
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: name,asc
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IssueList'
+        '204':
+          description: 'No Content'
+        '401':
+          description: 'Unauthorized'
+  /publishers:
+    get:
+      tags:
+        - Publishers
+      summary: Get all publishers
+      description: Retrieve a list with all publishers in the collector
+      operationId: getAllPublishers
+      security:
+        - collector_auth: []
+      parameters:
+        - name: page
+          in: query
+          description: Zero based page index (0... N)
+          required: false
+          explode: true
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          description: Number of records per page
+          required: false
+          explode: true
+          schema:
+            type: integer
+            default: 10
+        - name: sort
+          in: query
+          description: 'Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported'
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: name,asc
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublisherList'
+        '204':
+          description: 'No Content'
+        '401':
+          description: 'Unauthorized'
+  /publishers/{key}:
+    get:
+      tags:
+        - Publishers
+      summary: Get specific publisher by key
+      description: Retrieve the publisher associated to key
+      operationId: getPublisherByKey
+      security:
+        - collector_auth: [ ]
+      parameters:
+        - name: key
+          in: path
+          description: Publisher key
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Publisher'
+        '204':
+          description: 'No Content'
+        '401':
+          description: 'Unauthorized'
+  /publishers/{key}/titles:
+    get:
+      tags:
+        - Publishers
+      summary: Get all titles edited by specific publisher
+      description: Retrieve all published titles by specific publisher
+      operationId: getTitlesByPublisherKey
+      security:
+        - collector_auth: [ ]
+      parameters:
+        - name: key
+          in: path
+          description: Publisher key
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: Zero based page index (0... N)
+          required: false
+          explode: true
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          description: Number of records per page
+          required: false
+          explode: true
+          schema:
+            type: integer
+            default: 10
+        - name: sort
+          in: query
+          description: 'Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported'
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: name,asc
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TitleList'
+        '204':
+          description: 'No Content'
+        '401':
+          description: 'Unauthorized'
+  /titles/{key}:
+    get:
+      tags:
+        - Titles
+      summary: Get title by title-key and publisher-key
+      description: Retrieve title based on title-key and publisher-key parameters
+      operationId: getTitleByKey
+      security:
+        - collector_auth: [ ]
+      parameters:
+        - name: key
+          in: path
+          description: Publisher key
+          required: true
+          schema:
+            type: string
+        - name: publisher
+          in: query
+          description: Publisher key
+          required: true
+          explode: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: Zero based page index (0... N)
+          required: false
+          explode: true
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          description: Number of records per page
+          required: false
+          explode: true
+          schema:
+            type: integer
+            default: 10
+        - name: sort
+          in: query
+          description: 'Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported'
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: name,asc
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Title'
+        '204':
+          description: 'No Content'
+        '401':
+          description: 'Unauthorized'
+  /titles/{key}/issues:
+    get:
+      tags:
+        - Titles
+      summary: Get issues by title-key and publisher-key
+      description: Retrieve issues based on title-key and publisher-key parameters
+      operationId: getIssuesByPublisherKeyAndTitleByKey
+      security:
+        - collector_auth: [ ]
+      parameters:
+        - name: key
+          in: path
+          description: Publisher key
+          required: true
+          schema:
+            type: string
+        - name: publisher
+          in: query
+          description: Publisher key
+          required: true
+          explode: true
+          schema:
+            type: string
+        - name: variant
+          in: query
+          description: variant
+          required: false
+          explode: true
+          schema:
+            type: boolean
+        - name: page
+          in: query
+          description: Zero based page index (0... N)
+          required: false
+          explode: true
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          description: Number of records per page
+          required: false
+          explode: true
+          schema:
+            type: integer
+            default: 10
+        - name: sort
+          in: query
+          description: 'Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported'
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: name,asc
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IssueList'
+        '204':
+          description: 'No Content'
+        '401':
+          description: 'Unauthorized'
+  /issues/{key}:
+    get:
+      tags:
+        - Issues
+      summary: Get issues (if variant covers exists) by publisher-key, title-key and issue-key
+      description: Retrieve specific issues based on publisher-key, title-key and issue-key parameters
+      operationId: getIssueByPublisherKeyTitleByKeyAndIssueKey
+      security:
+        - collector_auth: [ ]
+      parameters:
+        - name: key
+          in: path
+          description: Issue key
+          required: true
+          schema:
+            type: string
+        - name: publisher
+          in: query
+          description: Publisher key
+          required: true
+          explode: true
+          schema:
+            type: string
+        - name: title
+          in: query
+          description: Title key
+          required: true
+          explode: true
+          schema:
+            type: string
+        - name: variant
+          in: query
+          description: variant
+          required: false
+          explode: true
+          schema:
+            type: boolean
+        - name: page
+          in: query
+          description: Zero based page index (0... N)
+          required: false
+          explode: true
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          description: Number of records per page
+          required: false
+          explode: true
+          schema:
+            type: integer
+            default: 10
+        - name: sort
+          in: query
+          description: 'Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported'
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: name,asc
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IssueList'
+        '204':
+          description: 'No Content'
+        '401':
+          description: 'Unauthorized'
+components:
+  securitySchemes:
+    collector_auth:
+      type: http
+      scheme: bearer
+      flows:
+        implicit:
+          authorizationUrl: http://localhost:8080/collector/v1/auth/login
+          scopes:
+            write:collection: modify items in your collection
+            read:collection: read your collection
+  schemas:
+    Token:
+      type: object
+      properties:
+        access_token:
+          type: string
+          example: demo.access.token
+        refresh_token:
+          type: string
+          example: demo.refresh.token
+        token_type:
+          type: string
+          example: Bearer
+        expires_in:
+          type: integer
+          example: 3600
+    Refresh:
+      type: object
+      properties:
+        refresh_token:
+          type: string
+          example: demo.refresh.token
+    Publisher:
+      type: object
+      properties:
+        name:
+          type: string
+          example: TechWorld
+        key:
+          type: string
+          example: techworld
+        url:
+          type: string
+          example: https://techworld.com
+        logo:
+          type: string
+          example: https://techworld.com
+        information:
+          type: string
+          example: https://techworld.com
+        socialNetworks:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                example: FACEBOOK
+              username:
+                type: string
+                example: techworldFB
+              url:
+                type: string
+                example: https://facebook.com/techworld
+    Title:
+      properties:
+        name:
+          type: string
+          example: Future Tech Monthly
+        key:
+          type: string
+          example: future-tech-monthly
+        cover:
+          type: string
+          example: https://techworld.com/covers/future_tech_monthly.png
+        demography:
+          type: string
+          example: Technology Enthusiasts
+        format:
+          type: string
+          example: Digital
+        frequency:
+          type: string
+          example: Monthly
+        releaseDate:
+          type: string
+          format: date-time
+          example: 2017-07-21T17:32:28Z
+        status:
+          type: string
+          example: Active
+        type:
+          type: string
+          example: Magazine
+        totalIssues:
+          type: integer
+          example: 50
+        genres:
+          type: array
+          items:
+            type: string
+            example: Science Fiction
+        authors:
+          type: object
+          properties:
+            creator:
+              type: array
+              items:
+                type: string
+                example: Noah Griffin
+    Issue:
+      properties:
+        name:
+          type: string
+          example: Future Tech Monthly 1
+        key:
+          type: string
+          example: 1
+        number:
+          type: number
+          example: 1
+        cover:
+          type: string
+          example: ftm-cover-01.png
+        pages:
+          type: integer
+          example: 230
+        printedPrice:
+          type: number
+          example: 9.99
+        digitalPrice:
+          type: number
+          example: 6.99
+        currency:
+          type: string
+          example: USD
+        releaseDate:
+          type: string
+          format: date-time
+          example: 2017-07-21T17:32:28Z
+        shortReview:
+          type: string
+          example: A visionary start to the series
+        event:
+          type: string
+          example: battle star
+        storyArch:
+          type: string
+          example: Star Arch
+        isbn:
+          type: string
+          example: 979-8-88-879010-1
+        barcode:
+          type: number
+          example: 978020137962
+        edition:
+          type: integer
+          example: 1
+        variant:
+          type: boolean
+          example: false
+        likesCounter:
+          type: integer
+          example: 10
+        dislikesCounter:
+          type: integer
+          example: 2
+        collected:
+          type: boolean
+          example: true
+    PublisherList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Publisher'
+    TitleList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Title'
+    IssueList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Issue'

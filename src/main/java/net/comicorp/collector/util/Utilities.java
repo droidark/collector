@@ -7,6 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.PagedModel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Utilities {
@@ -19,8 +20,8 @@ public class Utilities {
         List<Sort.Order> orders = new ArrayList<>();
         if (sort[0].contains(",")) {
             for (String sortOrder : sort) {
-                String[] split = sortOrder.split(",");
-                orders.add(new Sort.Order(getSortDirection(split[1]), split[0]));
+                String[] _sort = sortOrder.split(",");
+                orders.add(new Sort.Order(getSortDirection(_sort[1]), _sort[0]));
             }
         } else {
             orders.add(new Sort.Order(getSortDirection(sort[1]), sort[0]));
