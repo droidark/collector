@@ -13,6 +13,12 @@ spring:
     properties:
       hibernate:
         show_sql: true
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  cache:
+    type: redis
 application:
   jwt:
     access:
@@ -23,6 +29,8 @@ application:
       private-key: classpath:keys/refresh-token-private.pem
 logging:
   level:
-    org.springframework.security: DEBUG
-    org.springframework.security.oauth2: DEBUG
-    org.springframework.web: DEBUG
+#    org.springframework.security: DEBUG
+#    org.springframework.security.oauth2: DEBUG
+#    org.springframework.web: DEBUG
+    org.springframework.cache: DEBUG
+    org.springframework.data.redis.cache: DEBUG
