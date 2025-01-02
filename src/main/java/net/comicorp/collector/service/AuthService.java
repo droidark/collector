@@ -7,4 +7,5 @@ import org.springframework.security.core.Authentication;
 public interface AuthService {
     TokenDTO login(Authentication authentication);
     TokenDTO refreshToken(RefreshDTO refreshDTO);
+    String logout(String token);
 }

@@ -7,7 +7,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.PagedModel;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Utilities {

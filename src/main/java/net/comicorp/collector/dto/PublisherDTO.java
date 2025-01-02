@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.hateoas.server.core.Relation;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 
 @Data
@@ -13,7 +15,10 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Relation(collectionRelation = "publishers")
-public class PublisherDTO {
+public class PublisherDTO implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     private String name;
 

@@ -11,6 +11,8 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static net.comicorp.collector.util.Utilities.buildPage;
 import static net.comicorp.collector.util.Utilities.buildPagedModel;
 
@@ -23,13 +25,18 @@ public class PublisherController {
 
     private final TitleService titleService;
 
+    @GetMapping("/all")
+    ResponseEntity<List<PublisherDTO>> getAllPublishers() {
+        return ResponseEntity.ok(publisherService.getAllPublishers());
+    }
+
     @GetMapping
     ResponseEntity<PagedModel<PublisherDTO>> retrieveAllPublishers(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "name,asc") String[] sort) {
         Page<PublisherDTO> publisherDTOPage = publisherService.getPublishers(buildPage(page, size, sort));
-        return publisherDTOPage.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(buildPagedModel(publisherDTOPage));
+        return publisherDTOPage.getContent().isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(buildPagedModel(publisherDTOPage));
     }
 
     @GetMapping("/{key}")

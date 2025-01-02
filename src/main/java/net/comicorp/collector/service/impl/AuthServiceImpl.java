@@ -4,16 +4,17 @@ import lombok.extern.slf4j.Slf4j;
 import net.comicorp.collector.dto.RefreshDTO;
 import net.comicorp.collector.dto.TokenDTO;
 import net.comicorp.collector.service.AuthService;
+import net.comicorp.collector.service.RedisService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static net.comicorp.collector.constant.Constants.*;
@@ -23,16 +24,23 @@ import static net.comicorp.collector.constant.Constants.*;
 public class AuthServiceImpl implements AuthService {
 
     private final JwtEncoder jwtAccessEncoder;
+    private final JwtDecoder jwtAccessTokenDecoder;
     private final JwtEncoder jwtRefreshEncoder;
     private final JwtDecoder jwtRefreshDecoder;
+    private final RedisService redisService;
+
     private Instant now;
 
     public AuthServiceImpl(JwtEncoder jwtAccessEncoder,
+                           JwtDecoder jwtAccessTokenDecoder,
                            @Qualifier("jwtRefreshEncoder") JwtEncoder jwtRefreshEncoder,
-                           @Qualifier("jwtRefreshDecoder") JwtDecoder jwtRefreshDecoder) {
+                           @Qualifier("jwtRefreshDecoder") JwtDecoder jwtRefreshDecoder,
+                           RedisService redisService) {
         this.jwtAccessEncoder = jwtAccessEncoder;
+        this.jwtAccessTokenDecoder = jwtAccessTokenDecoder;
         this.jwtRefreshEncoder = jwtRefreshEncoder;
         this.jwtRefreshDecoder = jwtRefreshDecoder;
+        this.redisService = redisService;
     }
 
     @Override
@@ -75,6 +83,21 @@ public class AuthServiceImpl implements AuthService {
                 .build();
     }
 
+    @Override
+    public String logout(String token) {
+        // Extract token
+        String jwt = token.substring(7);
+
+        // Decode the token to find the expiration time
+        Jwt jwtDecoded = jwtAccessTokenDecoder.decode(jwt);
+
+        long expirationTime = jwtDecoded.getExpiresAt().getEpochSecond() - TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
+
+        redisService.blacklistToken(jwt, expirationTime);
+
+        return "Logged out successfully";
+    }
+
     private Jwt buildToken(String type, Authentication authentication, Instant expiresAt, JwtEncoder encoder) {
 
         String scope = buildScopes(authentication.getAuthorities());
@@ -108,9 +131,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private Jwt buildRefreshToken(Jwt jwt) {
-        return Duration.between(now, jwt.getExpiresAt()).toDays() < 1
-                ? buildToken(jwt, now.plus(7, ChronoUnit.DAYS), jwtRefreshEncoder)
-                : jwt;
+        return buildToken(jwt, now.plus(7, ChronoUnit.DAYS), jwtRefreshEncoder);
     }
 
     private String buildScopes(Collection<? extends GrantedAuthority> roles) {

@@ -6,6 +6,7 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import net.comicorp.collector.service.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -67,15 +68,19 @@ public class SecurityConfig {
     @Autowired
     UserDetailsManager userDetailsManager;
 
+    @Autowired
+    RedisService redisService;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
                 .addFilterBefore(customJwtFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/login", "/signup").permitAll()
+                        .requestMatchers("/auth/refresh").permitAll()
                         .requestMatchers(SWAGGER_WHITELIST).permitAll()
-                        .requestMatchers("/refresh").authenticated()
                         .anyRequest().authenticated())
                 .authenticationManager(authenticationManager(http))
                 .csrf(AbstractHttpConfigurer::disable)
@@ -105,6 +110,9 @@ public class SecurityConfig {
     public CustomJwtFilter customJwtFilter() {
         return new CustomJwtFilter(jwtRefreshDecoder());
     }
+
+    @Bean
+    public JwtFilter jwtFilter() { return new JwtFilter(redisService); }
 
 
     // ACCESS TOKEN
