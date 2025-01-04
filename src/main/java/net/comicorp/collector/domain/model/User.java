@@ -3,13 +3,10 @@ package net.comicorp.collector.domain.model;
 import jakarta.persistence.*;
 import lombok.*;
 import net.comicorp.collector.constant.Status;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.*;
-
-import static net.comicorp.collector.constant.Constants.ROLE_PREFIX;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -18,10 +15,10 @@ import static net.comicorp.collector.constant.Constants.ROLE_PREFIX;
 @Getter
 @Setter
 @Builder
-public class User implements UserDetails {
+public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "username")
@@ -50,7 +47,7 @@ public class User implements UserDetails {
     private Status status;
 
     @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
-    private Set<Profile> profiles;
+    private Set<Profile> profiles = new HashSet<>();
 
     @ManyToMany
     @JoinTable(
@@ -59,34 +56,4 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "issue_id")
     )
     private Set<Issue> issues;
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Optional
-                .ofNullable(this.getProfiles())
-                .orElse(Collections.emptySet())
-                .stream()
-                .map(profile -> new SimpleGrantedAuthority(ROLE_PREFIX + profile.getProfileName()))
-                .toList();
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 }

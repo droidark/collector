@@ -5,14 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.comicorp.collector.dto.RefreshDTO;
 import net.comicorp.collector.dto.TokenDTO;
 import net.comicorp.collector.service.AuthService;
-import net.comicorp.collector.service.RedisService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/auth")

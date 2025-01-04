@@ -2,10 +2,7 @@ package net.comicorp.collector.component;
 
 import lombok.RequiredArgsConstructor;
 import net.comicorp.collector.domain.model.*;
-import net.comicorp.collector.dto.IssueDTO;
-import net.comicorp.collector.dto.PublisherDTO;
-import net.comicorp.collector.dto.SocialNetworkDTO;
-import net.comicorp.collector.dto.TitleDTO;
+import net.comicorp.collector.dto.*;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -74,5 +71,13 @@ public class Mapper {
 
     public IssueDTO toIssueDTO(Issue issue) {
         return this.modelMapper.map(issue, IssueDTO.class);
+    }
+
+    public User toUser(UserDTO userDTO) { return modelMapper.map(userDTO, User.class); }
+
+    public UserDTO toUserDTO(User user) {
+        this.modelMapper.typeMap(User.class, UserDTO.class)
+                .addMappings(mapper -> mapper.skip(UserDTO::setPassword));
+        return this.modelMapper.map(user, UserDTO.class);
     }
 }

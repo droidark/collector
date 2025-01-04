@@ -7,6 +7,7 @@ import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import net.comicorp.collector.service.RedisService;
+import net.comicorp.collector.service.impl.CustomUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -66,10 +67,10 @@ public class SecurityConfig {
     RSAPrivateKey refreshPrivateKey;
 
     @Autowired
-    UserDetailsManager userDetailsManager;
+    RedisService redisService;
 
     @Autowired
-    RedisService redisService;
+    CustomUserDetailService userDetailService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -78,7 +79,7 @@ public class SecurityConfig {
                 .addFilterBefore(customJwtFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/login", "/signup").permitAll()
+                        .requestMatchers("/login", "/users/signup").permitAll()
                         .requestMatchers("/auth/refresh").permitAll()
                         .requestMatchers(SWAGGER_WHITELIST).permitAll()
                         .anyRequest().authenticated())
@@ -101,7 +102,7 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder
-                .userDetailsService(userDetailsManager)
+                .userDetailsService(userDetailService)
                 .passwordEncoder(passwordEncoder());
         return authenticationManagerBuilder.build();
     }
