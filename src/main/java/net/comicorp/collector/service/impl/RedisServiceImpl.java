@@ -5,6 +5,7 @@ import net.comicorp.collector.service.RedisService;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -22,6 +23,6 @@ public class RedisServiceImpl implements RedisService {
 
     @Override
     public boolean isTokenBlacklisted(String token) {
-        return redisTemplate.hasKey(token);
+        return Optional.ofNullable(redisTemplate.hasKey(token)).orElse(false);
     }
 }
