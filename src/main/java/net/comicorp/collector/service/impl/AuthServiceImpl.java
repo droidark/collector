@@ -29,7 +29,7 @@ public class AuthServiceImpl implements AuthService {
     private final JwtDecoder jwtRefreshDecoder;
     private final RedisService redisService;
 
-    private Instant now;
+    private final Instant now;
 
     public AuthServiceImpl(JwtEncoder jwtAccessEncoder,
                            JwtDecoder jwtAccessTokenDecoder,
@@ -41,12 +41,11 @@ public class AuthServiceImpl implements AuthService {
         this.jwtRefreshEncoder = jwtRefreshEncoder;
         this.jwtRefreshDecoder = jwtRefreshDecoder;
         this.redisService = redisService;
+        this.now = Instant.now();
     }
 
     @Override
     public TokenDTO login(Authentication authentication) {
-
-        now = Instant.now();
 
         Instant accessTokenExpiresAt = now.plusSeconds(EXPIRY);
         Instant refreshTokenExpiresAt = now.plus(7, ChronoUnit.DAYS);
@@ -66,8 +65,6 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public TokenDTO refreshToken(RefreshDTO refreshDTO) throws JwtException{
         Jwt decodedRefreshToken = jwtRefreshDecoder.decode(refreshDTO.getRefreshToken());
-
-        now = Instant.now();
 
         Instant accessTokenExpiresAt = now.plusSeconds(EXPIRY);
 
